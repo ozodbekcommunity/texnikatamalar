@@ -1,0 +1,1871 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT Infratuzilma: 0 dan Pro gacha</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fredoka Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Fredoka', 'sans-serif'],
+                    },
+                    colors: {
+                        dark: '#0f172a',
+                        darker: '#0b1120',
+                        primary: '#3b82f6',
+                        secondary: '#10b981',
+                        terminal: '#1e1e1e',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Fredoka', sans-serif; background-color: #0f172a; color: #e2e8f0; overflow: hidden; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        /* Animations */
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-slide-in { animation: slideIn 0.4s ease-out forwards; }
+        
+        @keyframes movePacket {
+            0% { left: 0%; opacity: 1; transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { left: 80%; opacity: 0; transform: scale(1); }
+        }
+        .sim-packet { position: absolute; animation: movePacket 3s infinite linear; }
+
+        @keyframes pulse-border {
+            0% { border-color: rgba(59, 130, 246, 0.5); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+            70% { border-color: rgba(59, 130, 246, 1); box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+            100% { border-color: rgba(59, 130, 246, 0.5); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+        }
+        .animate-pulse-border { animation: pulse-border 2s infinite; }
+
+        /* Terminal typing effect */
+        .typewriter text {
+            overflow: hidden; white-space: nowrap; margin: 0 auto;
+            border-right: .15em solid orange;
+            animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+        }
+
+        .code-block { font-family: 'Courier New', Courier, monospace; }
+        
+        /* Interactive Elements */
+        .btn-sim { transition: all 0.2s; }
+        .btn-sim:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); }
+        .btn-sim:active { transform: translateY(0); }
+    </style>
+</head>
+<body class="h-screen flex flex-col md:flex-row antialiased selection:bg-primary selection:text-white">
+
+    <!-- Sidebar -->
+    <aside class="w-full md:w-80 bg-darker border-r border-slate-800 flex flex-col h-1/3 md:h-screen transition-all z-20">
+        <div class="p-4 border-b border-slate-800 bg-darker sticky top-0">
+            <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent flex items-center gap-2">
+                <i class="fas fa-server"></i> IT Infratuzilma
+            </h1>
+            <p class="text-slate-400 text-sm mt-1">23 ta asosiy texnologiya</p>
+        </div>
+        <div class="flex-1 overflow-y-auto p-2 space-y-1" id="sidebar-menu">
+            <!-- Menus will be generated here -->
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 h-2/3 md:h-screen flex flex-col relative overflow-hidden bg-dark">
+        
+        <!-- Header -->
+        <header class="p-6 border-b border-slate-800 bg-dark/50 backdrop-blur z-10">
+            <h2 id="topic-title" class="text-3xl font-bold text-white mb-4 animate-slide-in">Yuklanmoqda...</h2>
+            
+            <!-- Tabs -->
+            <div class="flex space-x-2 bg-slate-800/50 p-1 rounded-lg w-max" id="tabs-container">
+                <button onclick="switchTab('theory')" id="tab-theory" class="px-4 py-2 rounded-md text-sm font-medium transition-all bg-primary text-white shadow"><i class="fas fa-book mr-2"></i>Nazariya</button>
+                <button onclick="switchTab('practice')" id="tab-practice" class="px-4 py-2 rounded-md text-sm font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-700"><i class="fas fa-terminal mr-2"></i>Amaliyot</button>
+                <button onclick="switchTab('simulation')" id="tab-simulation" class="px-4 py-2 rounded-md text-sm font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-700"><i class="fas fa-gamepad mr-2"></i>Simulyatsiya</button>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <div class="flex-1 overflow-y-auto p-6 scroll-smooth" id="content-area">
+            <!-- Dynamic Content goes here -->
+        </div>
+
+        <!-- Footer Navigation -->
+        <footer class="p-4 border-t border-slate-800 flex justify-between items-center bg-darker mt-auto z-10">
+            <button onclick="prevTopic()" class="px-4 py-2 rounded bg-slate-800 hover:bg-slate-700 transition text-sm flex items-center gap-2">
+                <i class="fas fa-chevron-left"></i> Oldingi
+            </button>
+            <span id="topic-counter" class="text-slate-500 font-mono">1 / 23</span>
+            <button onclick="nextTopic()" class="px-4 py-2 rounded bg-primary hover:bg-blue-600 transition text-sm flex items-center gap-2">
+                Keyingi <i class="fas fa-chevron-right"></i>
+            </button>
+        </footer>
+    </main>
+
+    <script>
+        // Data Structure for all 23 topics
+        const topics = [
+            {
+                id: 1, title: "1. Protocol (Protokol)", icon: "fa-handshake",
+                theory: `
+                    <h3 class="text-xl font-bold text-blue-400 mb-2">Protokol o'zi nima?</h3>
+                    <p class="mb-4 text-slate-300 leading-relaxed">Tasavvur qiling, ikki kishi gaplashmoqchi. Biri yaponcha, ikkinchisi ispancha gapirsa, ular bir-birini tushunmaydi. Aloqa o'rnatish uchun ular umumiy qoidalarga (masalan, ikkisi ham inglizcha gapirishi) kelishib olishi kerak. <strong>Protokol</strong> kompyuter tarmoqlarida aynan shunday "umumiy til" va qoidalar to'plamidir.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                        <div class="bg-slate-800 p-4 rounded-lg border border-slate-700">
+                            <h4 class="text-emerald-400 font-bold mb-2">OSI Modeli (7 qatlam)</h4>
+                            <p class="text-sm text-slate-400">Protokollar qatlamlarga bo'linadi. Jismoniy kabellardan (Layer 1) tortib, ilovalargacha (Layer 7 - HTTP, FTP).</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg border border-slate-700">
+                            <h4 class="text-emerald-400 font-bold mb-2">TCP/IP Modeli</h4>
+                            <p class="text-sm text-slate-400">Zamonaviy internetning asosi. Ma'lumotlarni paketlarga bo'lib manzilga ishonchli (TCP) yoki tez (UDP) yetkazish.</p>
+                        </div>
+                    </div>
+                `,
+                practice: `
+                    <p class="mb-4 text-slate-300">Terminalda protokollarni tekshirish (ICMP protokoli orqali ping yuborish):</p>
+                    <div class="bg-terminal p-4 rounded-lg shadow-lg font-mono text-sm">
+                        <span class="text-green-400">user@ubuntu:~$</span> ping google.com<br>
+                        <span class="text-slate-300">PING google.com (142.250.190.46) 56(84) bytes of data.</span><br>
+                        <span class="text-slate-300">64 bytes from 142.250.190.46: icmp_seq=1 ttl=115 time=14.2 ms</span><br>
+                        <br>
+                        <span class="text-slate-500"># Bu yerda ICMP (Internet Control Message Protocol) ishlamoqda.</span>
+                    </div>
+                `,
+                simFunc: () => {
+                    return `
+                    <div class="flex flex-col items-center justify-center h-full">
+                        <h3 class="text-xl mb-8 text-center">Kompyuterlar bir-birini tushunishi uchun to'g'ri protokolni tanlang</h3>
+                        <div class="flex justify-between items-center w-full max-w-2xl bg-slate-800 p-8 rounded-xl relative">
+                            <div class="text-center z-10">
+                                <i class="fas fa-desktop text-6xl text-blue-400 mb-2"></i>
+                                <p>Kompyuter A</p>
+                            </div>
+                            
+                            <div class="flex flex-col gap-2 z-10 w-48">
+                                <button onclick="simProtocol('wrong')" class="bg-red-500/20 text-red-400 border border-red-500 py-2 rounded hover:bg-red-500/40 transition">Xato Til (Abra-kadabra)</button>
+                                <button onclick="simProtocol('tcp')" class="bg-green-500/20 text-green-400 border border-green-500 py-2 rounded hover:bg-green-500/40 transition">TCP/IP (Standart)</button>
+                            </div>
+
+                            <div class="text-center z-10">
+                                <i class="fas fa-server text-6xl text-purple-400 mb-2"></i>
+                                <p>Server B</p>
+                            </div>
+
+                            <!-- Animated lines -->
+                            <div id="protocol-line" class="absolute top-1/2 left-24 right-24 h-1 bg-slate-600 -translate-y-1/2"></div>
+                            <div id="protocol-packet" class="absolute top-1/2 left-24 w-6 h-6 bg-yellow-400 rounded-full -translate-y-1/2 shadow-[0_0_15px_rgba(250,204,21,0.6)] hidden transition-all duration-1000"></div>
+                        </div>
+                        <div id="protocol-result" class="mt-8 text-xl font-bold h-8"></div>
+                    </div>
+                    `;
+                }
+            },
+            {
+                id: 2, title: "2. HTTPS", icon: "fa-lock",
+                theory: `
+                    <h3 class="text-xl font-bold text-blue-400 mb-2">HTTPS (Hypertext Transfer Protocol Secure)</h3>
+                    <p class="mb-4 text-slate-300">Internetda ma'lumot almashishning xavfsiz shakli. Siz kiritgan parol, kredit karta raqamlari xakerlar tomonidan yo'lda ushlanib qolmasligi uchun <strong>shifrlanadi (Encryption)</strong>.</p>
+                    <ul class="list-disc pl-5 space-y-2 text-slate-300">
+                        <li><strong>SSL/TLS:</strong> Ma'lumotni shifrlaydigan sertifikatlar.</li>
+                        <li><strong>Asimmetrik shifrlash:</strong> Ulanish o'rnatilayotganda ochiq (Public) va yopiq (Private) kalitlardan foydalaniladi.</li>
+                        <li><strong>Port:</strong> Odatda 443-portda ishlaydi.</li>
+                    </ul>
+                `,
+                practice: `
+                    <p class="mb-4 text-slate-300">Saytning SSL sertifikatini curl orqali tekshirish:</p>
+                    <div class="bg-terminal p-4 rounded-lg shadow-lg font-mono text-sm code-block">
+                        <span class="text-green-400">user@ubuntu:~$</span> curl -Iv https://google.com<br>
+                        <span class="text-slate-400">* subject: CN=*.google.com</span><br>
+                        <span class="text-slate-400">* start date: Aug  7 08:26:22 2023 GMT</span><br>
+                        <span class="text-slate-400">* expire date: Oct 30 08:26:21 2023 GMT</span><br>
+                        <span class="text-emerald-400">* SSL connection using TLSv1.3 / AEAD-CHACHA20-POLY1305-SHA256</span>
+                    </div>
+                `,
+                simFunc: () => {
+                    return `
+                    <div class="flex flex-col items-center">
+                        <div class="flex justify-between w-full max-w-3xl items-center bg-slate-800 p-8 rounded-xl relative overflow-hidden">
+                            <div class="text-center z-10 w-24">
+                                <i class="fas fa-user text-5xl text-blue-400 mb-2"></i>
+                                <p>Siz</p>
+                            </div>
+                            
+                            <div class="flex-1 px-8 relative h-10 flex items-center justify-center border-y border-dashed border-slate-600">
+                                <div id="https-msg" class="absolute left-0 bg-blue-500 text-white px-3 py-1 rounded text-sm transition-all duration-3000 ease-in-out opacity-0">Parol: 12345</div>
+                                <i class="fas fa-user-secret text-4xl text-red-500 absolute bottom-12 opacity-50"></i>
+                                <span class="absolute bottom-12 text-xs text-red-400">Xaker kuzatmoqda</span>
+                            </div>
+
+                            <div class="text-center z-10 w-24">
+                                <i class="fas fa-server text-5xl text-emerald-400 mb-2"></i>
+                                <p>Bank Server</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8 flex gap-4">
+                            <button onclick="runHttpsSim('http')" class="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded font-bold shadow-lg">HTTP da yuborish (Xavfli)</button>
+                            <button onclick="runHttpsSim('https')" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold shadow-lg flex items-center gap-2"><i class="fas fa-lock"></i> HTTPS da yuborish (Xavfsiz)</button>
+                        </div>
+                        <div id="https-status" class="mt-6 text-lg h-8"></div>
+                    </div>
+                    `;
+                }
+            },
+            {
+                id: 3, title: "3. HTTP", icon: "fa-globe",
+                theory: `
+                    <h3 class="text-xl font-bold text-blue-400 mb-2">HTTP (Hypertext Transfer Protocol)</h3>
+                    <p class="mb-4 text-slate-300">Veb sahifalarni brauzeringizga olib keluvchi asosiy poydevor. HTTP so'rovlar matn ko'rinishida yuboriladi (shifrlanmagan).</p>
+                    <div class="bg-slate-800 p-4 rounded-lg mt-4">
+                        <h4 class="text-emerald-400 font-bold mb-2">Asosiy Metodlar:</h4>
+                        <ul class="list-disc pl-5 text-sm text-slate-400">
+                            <li><strong>GET:</strong> Ma'lumotni o'qish (sahifani ochish).</li>
+                            <li><strong>POST:</strong> Yangi ma'lumot yuborish (ro'yxatdan o'tish, rasm yuklash).</li>
+                            <li><strong>PUT/PATCH:</strong> Ma'lumotni yangilash.</li>
+                            <li><strong>DELETE:</strong> Ma'lumotni o'chirish.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-800 p-4 rounded-lg mt-4">
+                        <h4 class="text-yellow-400 font-bold mb-2">Status Kodlar:</h4>
+                        <p class="text-sm text-slate-400"><strong>200 OK</strong> (Hammasi zo'r), <strong>301</strong> (Boshqa joyga ko'chdi), <strong>404</strong> (Topilmadi), <strong>500</strong> (Serverda xatolik).</p>
+                    </div>
+                `,
+                practice: `
+                    <p class="mb-4 text-slate-300">Sof HTTP so'rov qanday ko'rinishga ega bo'ladi?</p>
+                    <div class="bg-terminal p-4 rounded-lg shadow-lg font-mono text-sm code-block text-blue-300">
+                        GET /index.html HTTP/1.1<br>
+                        Host: www.example.com<br>
+                        User-Agent: Mozilla/5.0<br>
+                        Accept-Language: uz-UZ<br>
+                        <br>
+                        <span class="text-emerald-400">HTTP/1.1 200 OK<br>
+                        Content-Type: text/html<br>
+                        Content-Length: 138<br><br>
+                        &lt;html&gt;&lt;body&gt;Salom Dunyo!&lt;/body&gt;&lt;/html&gt;</span>
+                    </div>
+                `,
+                simFunc: () => {
+                    return `
+                    <div class="flex flex-col items-center max-w-3xl mx-auto w-full">
+                        <h3 class="text-lg mb-4">Brauzer va Server o'rtasidagi muloqot</h3>
+                        
+                        <div class="w-full bg-white text-black rounded-t-lg border-b p-2 flex items-center gap-2">
+                            <div class="flex gap-1"><div class="w-3 h-3 rounded-full bg-red-500"></div><div class="w-3 h-3 rounded-full bg-yellow-500"></div><div class="w-3 h-3 rounded-full bg-green-500"></div></div>
+                            <div class="bg-slate-200 w-full rounded px-2 text-sm text-center flex items-center"><i class="fas fa-search text-slate-400 mr-2"></i>http://api.sayt.uz/users</div>
+                        </div>
+                        
+                        <div class="w-full bg-slate-800 h-64 p-4 font-mono text-sm overflow-y-auto flex flex-col gap-2" id="http-log">
+                            <div class="text-center text-slate-500 mb-4">So'rov yuborish uchun tugmalarni bosing</div>
+                        </div>
+
+                        <div class="grid grid-cols-4 gap-2 w-full mt-4">
+                            <button onclick="httpSim('GET', 200)" class="bg-blue-600 hover:bg-blue-500 py-2 rounded font-bold">GET (200)</button>
+                            <button onclick="httpSim('POST', 201)" class="bg-emerald-600 hover:bg-emerald-500 py-2 rounded font-bold">POST (201)</button>
+                            <button onclick="httpSim('GET', 404)" class="bg-yellow-600 hover:bg-yellow-500 py-2 rounded font-bold">GET (404)</button>
+                            <button onclick="httpSim('DELETE', 500)" class="bg-red-600 hover:bg-red-500 py-2 rounded font-bold">DELETE (500)</button>
+                        </div>
+                    </div>
+                    `;
+                }
+            },
+            {
+                id: 4, title: "4. FTP (File Transfer Protocol)", icon: "fa-folder-open",
+                theory: `
+                    <h3 class="text-xl font-bold text-blue-400 mb-2">FTP (Fayl Uzatish Protokoli)</h3>
+                    <p class="mb-4 text-slate-300">Klient va server o'rtasida fayllarni (rasm, video, kod) yuklash va tushirib olish uchun ishlatiladi. Portlari: <strong>20 (Data) va 21 (Boshqaruv)</strong>.</p>
+                    <div class="bg-yellow-900/30 border border-yellow-700 p-4 rounded-lg mt-4 text-sm">
+                        <i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>
+                        <strong>Muhim:</strong> Sof FTP ham xuddi HTTP kabi shifrlanmagan. Hozirgi kunda xavfsiz fayl uzatish uchun <strong>SFTP (SSH File Transfer Protocol)</strong> ishlatiladi.
+                    </div>
+                `,
+                practice: `
+                    <p class="mb-4 text-slate-300">Terminal0 orqali FTP serverga ulanish:</p>
+                    <div class="bg-terminal p-4 rounded-lg shadow-lg font-mono text-sm code-block">
+                        <span class="text-green-400">user@ubuntu:~$</span> ftp ftp.example.com<br>
+                        <span class="text-slate-400">Connected to ftp.example.com.</span><br>
+                        <span class="text-slate-400">Name (ftp.example.com:user): admin</span><br>
+                        <span class="text-slate-400">Password: ******</span><br>
+                        <span class="text-emerald-400">230 Login successful.</span><br>
+                        <span class="text-blue-400">ftp></span> put index.html<br>
+                        <span class="text-slate-400">226 Transfer complete.</span><br>
+                    </div>
+                `,
+                simFunc: () => `
+                    <div class="flex flex-col items-center w-full max-w-2xl mx-auto">
+                        <div class="flex w-full gap-8 h-64">
+                            <!-- Local PC -->
+                            <div class="flex-1 bg-slate-800 rounded-lg p-4 flex flex-col border border-slate-700">
+                                <h4 class="text-center font-bold mb-2 border-b border-slate-700 pb-2"><i class="fas fa-laptop mr-2"></i>Sizning PK</h4>
+                                <div class="flex-1 flex flex-col gap-2 p-2">
+                                    <div id="file-local" class="bg-blue-600 p-2 rounded cursor-pointer hover:bg-blue-500 flex items-center justify-between transition-all">
+                                        <span><i class="fas fa-file-archive mr-2"></i>loyha.zip (50MB)</span>
+                                        <button onclick="uploadFtp()" class="bg-white/20 px-2 py-1 rounded text-xs hover:bg-white/40"><i class="fas fa-arrow-right"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Server -->
+                            <div class="flex-1 bg-slate-800 rounded-lg p-4 flex flex-col border border-slate-700">
+                                <h4 class="text-center font-bold mb-2 border-b border-slate-700 pb-2"><i class="fas fa-server mr-2"></i>FTP Server</h4>
+                                <div id="server-files" class="flex-1 flex flex-col gap-2 p-2 relative">
+                                    <div class="bg-slate-700 p-2 rounded flex items-center text-slate-400"><i class="fas fa-folder mr-2"></i>/var/www/html</div>
+                                    <!-- Progress bar overlay -->
+                                    <div id="ftp-progress-container" class="hidden absolute inset-0 bg-slate-900/80 backdrop-blur-sm flex flex-col items-center justify-center rounded p-4">
+                                        <div class="w-full bg-slate-700 rounded-full h-2.5 mb-2">
+                                            <div id="ftp-progress" class="bg-blue-600 h-2.5 rounded-full transition-all duration-200" style="width: 0%"></div>
+                                        </div>
+                                        <span id="ftp-status" class="text-sm">Yuklanmoqda... 0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 5, title: "5. SSH (Secure Shell)", icon: "fa-terminal",
+                theory: `
+                    <h3 class="text-xl font-bold text-blue-400 mb-2">SSH nima?</h3>
+                    <p class="mb-4 text-slate-300">Uzoqdagi serverga xuddi uning oldida o'tirgandek, qora ekrandan (terminal) kirib boshqarish imkonini beruvchi protokoldir. Barcha buyruqlar va javoblar qattiq shifrlanadi.</p>
+                    <div class="bg-slate-800 p-4 rounded-lg">
+                        <h4 class="text-emerald-400 font-bold mb-2">SSH Kalitlar (Public / Private Keys):</h4>
+                        <p class="text-sm text-slate-400">Parol yozib kirishdan ko'ra kalitlardan foydalanish xavfsizroq va qulayroq. Kompyuteringizda Maxfiy (Private) kalit saqlanadi, serverga esa Ochiq (Public) kalit qo'yiladi. Ular faqat bir-biriga tushadi (qulf va kalit kabi).</p>
+                    </div>
+                `,
+                practice: `
+                    <div class="bg-terminal p-4 rounded-lg shadow-lg font-mono text-sm code-block">
+                        <span class="text-slate-500"># 1. SSH kalit yaratish</span><br>
+                        <span class="text-green-400">local:~$</span> ssh-keygen -t rsa -b 4096<br><br>
+                        
+                        <span class="text-slate-500"># 2. Kalitni serverga nusxalash</span><br>
+                        <span class="text-green-400">local:~$</span> ssh-copy-id root@192.168.1.50<br><br>
+
+                        <span class="text-slate-500"># 3. Serverga parolsiz kirish (22-port)</span><br>
+                        <span class="text-green-400">local:~$</span> ssh root@192.168.1.50<br>
+                        <span class="text-emerald-400">Welcome to Ubuntu 22.04 LTS!</span><br>
+                        <span class="text-purple-400">root@server:~#</span> <span class="animate-pulse">_</span>
+                    </div>
+                `,
+                simFunc: () => `
+                    <div class="w-full max-w-3xl mx-auto bg-[#1e1e1e] rounded-lg border border-slate-700 overflow-hidden shadow-2xl">
+                        <div class="bg-slate-800 px-4 py-2 flex items-center gap-2 border-b border-slate-700">
+                            <div class="w-3 h-3 rounded-full bg-red-500"></div><div class="w-3 h-3 rounded-full bg-yellow-500"></div><div class="w-3 h-3 rounded-full bg-green-500"></div>
+                            <span class="text-xs text-slate-400 ml-2 font-mono">root@remote-server:~</span>
+                        </div>
+                        <div class="p-4 font-mono text-sm h-64 overflow-y-auto" id="ssh-terminal">
+                            <div class="text-green-400">user@laptop:~$ <input type="text" id="ssh-input" class="bg-transparent border-none outline-none text-white w-64" placeholder="ssh root@192.168.0.10" onkeypress="handleSsh(event)"></div>
+                        </div>
+                    </div>
+                    <p class="text-center text-slate-400 text-sm mt-4">Simulyatsiyani boshlash uchun <code class="bg-slate-800 px-1 rounded">ssh root@server</code> deb yozing va Enter bosing.</p>
+                `
+            },
+            {
+                id: 6, title: "6. SMTP, POP3, IMAP", icon: "fa-envelope",
+                theory: `
+                    <h3 class="text-xl font-bold text-blue-400 mb-2">Elektron Pochta protokollari</h3>
+                    <p class="mb-4 text-slate-300">Pochta qanday ishlaydi? Bu haqiqiy hayotdagi pochtaxona tizimiga o'xshaydi.</p>
+                    <ul class="space-y-4 text-slate-300">
+                        <li class="bg-slate-800 p-3 rounded border border-slate-700"><strong>SMTP (Simple Mail Transfer Protocol - 25, 465, 587 portlar):</strong> Xatni yuborish protokoli. Sizning kompyuteringizdan pochtaxonaga va u yerdan qabul qiluvchining pochtaxonasiga olib boruvchi "Pochtachi" yuk mashinasi.</li>
+                        <li class="bg-slate-800 p-3 rounded border border-slate-700"><strong>IMAP (143, 993 portlar):</strong> Pochtani serverda o'qish (sinxronizatsiya). Telefonda o'qisangiz, kompyuterda ham o'qilgan bo'lib qoladi.</li>
+                        <li class="bg-slate-800 p-3 rounded border border-slate-700"><strong>POP3:</strong> Xatni serverdan qurilmaga yuklab olib, serverdan o'chirib yuboruvchi eski protokol.</li>
+                    </ul>
+                `,
+                practice: `
+                    <p class="mb-4 text-slate-300">Dasturlashda (.env faylda) pochta sozlamalari odatda shunday bo'ladi:</p>
+                    <div class="bg-terminal p-4 rounded-lg shadow-lg font-mono text-sm code-block text-blue-300">
+                        <span class="text-slate-500"># SMTP sozlamalari (Node.js, PHP, Python)</span><br>
+                        MAIL_MAILER=smtp<br>
+                        MAIL_HOST=smtp.gmail.com<br>
+                        MAIL_PORT=465<br>
+                        MAIL_USERNAME=your_email@gmail.com<br>
+                        MAIL_PASSWORD=app_specific_password_here<br>
+                        MAIL_ENCRYPTION=ssl<br>
+                        MAIL_FROM_ADDRESS="no-reply@saytingiz.uz"
+                    </div>
+                `,
+                simFunc: () => `
+                    <div class="flex items-center justify-center gap-8 py-8 w-full max-w-4xl mx-auto relative">
+                        <div class="bg-slate-800 p-4 rounded-xl text-center border border-slate-600 z-10 w-32">
+                            <i class="fas fa-laptop text-4xl text-blue-400 mb-2"></i><br>Siz
+                        </div>
+                        
+                        <div class="flex flex-col items-center z-10 w-40">
+                            <button onclick="animateMail()" class="bg-primary hover:bg-blue-600 px-4 py-2 rounded text-white font-bold whitespace-nowrap mb-2 shadow-lg z-20 relative">SMTP Yuborish</button>
+                            <i class="fas fa-server text-5xl text-purple-500"></i><br>Gmail Server
+                        </div>
+                        
+                        <div class="bg-slate-800 p-4 rounded-xl text-center border border-slate-600 z-10 w-32">
+                            <i class="fas fa-mobile-screen text-4xl text-emerald-400 mb-2"></i><br>Do'stingiz
+                            <div class="text-xs text-slate-400 mt-1">(IMAP orqali o'qiydi)</div>
+                        </div>
+
+                        <!-- Envelope -->
+                        <div id="sim-envelope" class="absolute left-24 top-1/2 -translate-y-1/2 text-3xl text-yellow-500 opacity-0 transition-all duration-1000 ease-in-out z-20">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 7, title: "7. DNS (Domain Name System)", icon: "fa-address-book",
+                theory: `
+                    <h3 class="text-xl font-bold text-blue-400 mb-2">DNS - Internetning telefon kitobchasi</h3>
+                    <p class="mb-4 text-slate-300">Kompyuterlar faqat IP manzillarni (masalan, 142.250.190.46) tushunadi. Odamlar esa nomlarni (google.com) eslab qolishadi. DNS bu nomlarni IP manzillarga o'girib beruvchi tizim.</p>
+                    <h4 class="text-emerald-400 font-bold mb-2">Asosiy DNS Yozuvlari (Records):</h4>
+                    <ul class="grid grid-cols-2 gap-2 text-sm text-slate-300">
+                        <li class="bg-slate-800 p-2 rounded"><strong>A Record:</strong> Domen -> IPv4</li>
+                        <li class="bg-slate-800 p-2 rounded"><strong>AAAA Record:</strong> Domen -> IPv6</li>
+                        <li class="bg-slate-800 p-2 rounded"><strong>CNAME:</strong> Subdomen -> Boshqa domen</li>
+                        <li class="bg-slate-800 p-2 rounded"><strong>MX Record:</strong> Elektron pochta marshruti</li>
+                        <li class="bg-slate-800 p-2 rounded col-span-2"><strong>TXT Record:</strong> Domen sizniki ekanini isbotlash yozuvi.</li>
+                    </ul>
+                `,
+                practice: `
+                    <p class="mb-4 text-slate-300">Domenning orqasida qaysi IP yashiringanini aniqlash:</p>
+                    <div class="bg-terminal p-4 rounded-lg shadow-lg font-mono text-sm code-block">
+                        <span class="text-green-400">user@ubuntu:~$</span> nslookup kun.uz<br>
+                        <span class="text-slate-400">Server:		127.0.0.53</span><br>
+                        <span class="text-slate-400">Address:	127.0.0.53#53</span><br><br>
+                        <span class="text-slate-400">Non-authoritative answer:</span><br>
+                        <span class="text-slate-400">Name:	kun.uz</span><br>
+                        <span class="text-emerald-400">Address: 172.67.73.189</span> <span class="text-slate-500"><- (Mana Cloudflare orqasidagi IP)</span>
+                    </div>
+                `,
+                simFunc: () => `
+                    <div class="flex flex-col items-center max-w-2xl mx-auto">
+                        <div class="w-full flex gap-4 mb-8 relative">
+                            <input type="text" id="dns-input" value="instagram.com" class="flex-1 bg-slate-800 border border-slate-600 rounded px-4 py-3 text-lg focus:outline-none focus:border-blue-500" readonly>
+                            <button onclick="runDnsSim()" class="bg-blue-600 hover:bg-blue-500 px-6 py-3 rounded font-bold">Qidirish</button>
+                        </div>
+                        
+                        <div class="relative w-full h-64 border border-slate-700 rounded-xl bg-slate-800/50 flex flex-col items-center justify-between py-6">
+                            <div class="flex justify-between w-full px-12">
+                                <div class="text-center"><i class="fas fa-desktop text-3xl text-slate-400"></i><p class="text-xs mt-1">Brauzer</p></div>
+                                <div id="dns-server-icon" class="text-center transition-all duration-300"><i class="fas fa-server text-3xl text-purple-400"></i><p class="text-xs mt-1">DNS Server</p></div>
+                                <div id="dns-target-icon" class="text-center opacity-20 transition-all duration-300"><i class="fas fa-globe text-3xl text-emerald-400"></i><p class="text-xs mt-1">Veb Sayt</p></div>
+                            </div>
+                            
+                            <div id="dns-log" class="text-center font-mono text-emerald-400 bg-black/50 px-4 py-2 rounded h-10 w-3/4 flex items-center justify-center">
+                                Tayyor...
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 8, title: "8. DDNS (Dynamic DNS)", icon: "fa-sync-alt",
+                theory: `
+                    <h3 class="text-xl font-bold text-blue-400 mb-2">DDNS (Dinamik DNS)</h3>
+                    <p class="mb-4 text-slate-300">Uyingizdagi yoki ofisingizdagi provayder sizga bergan IP manzil doimiy emas (router o'chib yonsa o'zgaradi). Lekin siz uyingizdagi kompyuterda server ochib, domenga bog'lamoqchisiz.</p>
+                    <p class="mb-4 text-slate-300"><strong>Muammo:</strong> IP o'zgarganda domen eski IP da qolib ketadi va sayt ishlamaydi.</p>
+                    <p class="text-slate-300"><strong>Yechim (DDNS):</strong> Uyingizdagi kompyuterga maxsus dastur o'rnatiladi. U har 5 daqiqada yangi IP manzilni aniqlab, Cloudflare kabi DNS serverga jo'natib, A yozuvni avtomatik yangilab turadi.</p>
+                `,
+                practice: `
+                    <p class="mb-4 text-slate-300">Crontab orqali Cloudflare API ga yangi IP ni yuboruvchi bash skript (Har 5 daqiqada ishlaydi):</p>
+                    <div class="bg-terminal p-4 rounded-lg shadow-lg font-mono text-sm code-block text-blue-300">
+                        <span class="text-slate-500">#!/bin/bash</span><br>
+                        CURRENT_IP=$(curl -s http://ipv4.icanhazip.com)<br>
+                        <br>
+                        curl -X PUT "https://api.cloudflare.com/client/v4/zones/ZONE_ID/dns_records/RECORD_ID" \\<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp; -H "Authorization: Bearer YOUR_TOKEN" \\<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp; -H "Content-Type: application/json" \\<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp; --data '{"type":"A","name":"uy-serveri.uz","content":"'\${CURRENT_IP}'","proxied":false}'
+                    </div>
+                `,
+                simFunc: () => `
+                    <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 max-w-2xl mx-auto flex flex-col gap-6">
+                        <div class="flex justify-between items-center bg-dark p-4 rounded-lg border border-slate-600">
+                            <div>
+                                <h4 class="font-bold text-emerald-400 mb-1"><i class="fas fa-home mr-2"></i>Uy Routeri (Dinamik IP)</h4>
+                                <div id="router-ip" class="font-mono text-xl bg-black px-2 py-1 rounded w-max text-red-400">84.54.12.99</div>
+                            </div>
+                            <button onclick="changeRouterIp()" class="bg-slate-700 hover:bg-slate-600 px-3 py-2 rounded text-sm"><i class="fas fa-power-off text-red-500 mr-2"></i>Routerni Restart qilish</button>
+                        </div>
+
+                        <div id="ddns-arrow" class="flex flex-col items-center justify-center opacity-30 transition-all text-blue-400">
+                            <i class="fas fa-arrow-up text-2xl animate-bounce"></i>
+                            <span class="text-xs bg-blue-900/50 px-2 rounded">API orqali yangilash</span>
+                        </div>
+
+                        <div class="bg-dark p-4 rounded-lg border border-slate-600">
+                            <h4 class="font-bold text-blue-400 mb-1"><i class="fas fa-cloud mr-2"></i>DNS Server (Cloudflare)</h4>
+                            <div class="flex justify-between items-center text-sm font-mono text-slate-300 bg-slate-800 p-2 rounded">
+                                <span>A Record: mening-uyim.uz</span>
+                                <span><i class="fas fa-arrow-right mx-2 text-slate-500"></i></span>
+                                <span id="dns-record-ip" class="text-emerald-400 bg-black px-2 rounded">84.54.12.99</span>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 9, title: "9. VPS, VDS, Shared Hosting", icon: "fa-server",
+                theory: `
+                    <h3 class="text-xl font-bold text-blue-400 mb-2">Vebsaytni qayerga joylaymiz?</h3>
+                    <div class="space-y-4">
+                        <div class="bg-slate-800 p-4 rounded border-l-4 border-yellow-500">
+                            <h4 class="font-bold text-yellow-500">Shared Hosting (Umumiy Xosting)</h4>
+                            <p class="text-sm text-slate-300 mt-1">Bitta katta kompyuterda (serverda) 1000 ta sayt joylashadi. Hammangiz bitta RAM, CPU ni baham ko'rasiz. Bitta saytga virus tushsa yoki yuklama oshsa, sizniki ham sekinlashadi. (Yotoqxona kabi).</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded border-l-4 border-blue-500">
+                            <h4 class="font-bold text-blue-500">VPS (Virtual Private Server) / VDS</h4>
+                            <p class="text-sm text-slate-300 mt-1">Katta server maxsus dastur (Hypervisor/KVM) orqali mantiqiy bo'laklarga bo'linadi. Sizga kafolatlangan 2GB RAM va 2 ta CPU yadrosi beriladi. To'liq huquq (root) sizda bo'ladi. (Ko'p qavatli uydagi o'z kvartirangiz kabi).</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded border-l-4 border-emerald-500">
+                            <h4 class="font-bold text-emerald-500">Dedicated Server (Ajratilgan server)</h4>
+                            <p class="text-sm text-slate-300 mt-1">Butun boshli qora temir (kompyuter) faqat siz uchun ishlaydi. (Hovli uy kabi).</p>
+                        </div>
+                    </div>
+                `,
+                practice: `
+                    <p class="mb-4 text-slate-300">VPS sotib olganingizda operativ xotira va disk holatini tekshirish buyruqlari:</p>
+                    <div class="bg-terminal p-4 rounded-lg shadow-lg font-mono text-sm code-block text-blue-300">
+                        <span class="text-green-400">root@vps:~#</span> free -h<br>
+                        <span class="text-slate-400">              total        used        free      shared  buff/cache   available<br>
+                        Mem:          1.9Gi       400Mi       1.0Gi       2.0Mi       500Mi       1.3Gi</span><br><br>
+                        <span class="text-green-400">root@vps:~#</span> df -h<br>
+                        <span class="text-slate-400">Filesystem      Size  Used Avail Use% Mounted on<br>
+                        /dev/sda1        40G   15G   23G  40% /</span>
+                    </div>
+                `,
+                simFunc: () => `
+                    <div class="flex gap-4 max-w-4xl mx-auto h-72">
+                        <!-- Shared -->
+                        <div class="flex-1 bg-slate-800 rounded-xl border border-slate-700 p-4 flex flex-col hover:border-yellow-500 transition cursor-pointer group">
+                            <h3 class="text-center font-bold text-yellow-500 mb-4 border-b border-slate-700 pb-2">Shared Hosting</h3>
+                            <div class="flex-1 border-2 border-slate-600 rounded bg-dark relative overflow-hidden p-2 grid grid-cols-4 gap-1">
+                                <!-- Many small sites -->
+                                ${Array(32).fill(0).map((_, i) => `<div class="bg-blue-500/20 border border-blue-500/50 rounded flex items-center justify-center text-[10px] ${i===15 ? 'bg-red-500/50 animate-pulse border-red-500 z-10' : ''}"><i class="fas fa-globe"></i></div>`).join('')}
+                                <div class="absolute inset-0 bg-red-500/10 hidden group-hover:flex items-center justify-center backdrop-blur-[1px]">
+                                    <span class="bg-red-600 text-white text-xs px-2 py-1 rounded font-bold text-center">Biri qotsa,<br>hammasi qotadi</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- VPS -->
+                        <div class="flex-1 bg-slate-800 rounded-xl border border-slate-700 p-4 flex flex-col hover:border-blue-500 transition cursor-pointer group">
+                            <h3 class="text-center font-bold text-blue-500 mb-4 border-b border-slate-700 pb-2">VPS (KVM)</h3>
+                            <div class="flex-1 bg-dark rounded relative p-2 flex flex-col gap-2">
+                                <div class="flex-1 border-2 border-emerald-500 rounded bg-emerald-500/10 flex items-center justify-center relative overflow-hidden">
+                                    <span class="absolute top-1 left-1 text-[10px] text-emerald-500">Sizning VPS</span>
+                                    <i class="fas fa-server text-3xl text-emerald-400"></i>
+                                </div>
+                                <div class="flex-1 border-2 border-slate-600 rounded bg-slate-600/10 flex items-center justify-center relative">
+                                    <span class="absolute top-1 left-1 text-[10px] text-slate-500">Boshqaning VPS</span>
+                                    <i class="fas fa-server text-3xl text-slate-500"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 10, title: "10. Nginx & Apache", icon: "fa-cogs",
+                theory: `
+                    <h3 class="text-xl font-bold text-blue-400 mb-2">Veb Serverlar (Web Servers)</h3>
+                    <p class="mb-4 text-slate-300">Port (masalan 80 yoki 443) da o'tirib, tashqaridan kelayotgan HTTP so'rovlarni qabul qilib, ularga javob (HTML, Rasm) qaytaruvchi dasturlar.</p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-slate-800 p-4 rounded border-t-4 border-red-500">
+                            <h4 class="font-bold text-red-500 flex items-center gap-2"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Apache_HTTP_server_logo_%282016%29.svg/300px-Apache_HTTP_server_logo_%282016%29.svg.png" class="h-4"> Apache</h4>
+                            <p class="text-sm text-slate-400 mt-2">Har bir so'rov uchun yangi jarayon (Process/Thread) ochadi. Kuchli modullari bor (masalan, .htaccess), lekin ko'p odam kirganda operativ xotirani (RAM) tez to'ldirib qo'yadi.</p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded border-t-4 border-green-500">
+                            <h4 class="font-bold text-green-500 flex items-center gap-2"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Nginx_logo.svg/300px-Nginx_logo.svg.png" class="h-4"> Nginx</h4>
+                            <p class="text-sm text-slate-400 mt-2">Hodisalarga asoslangan (Event-driven) asinxron arxitektura. Bitta jarayon orqali minglab so'rovlarni juda kam RAM sarflab bajara oladi. Statik fayllarni uzatishda qirol.</p>
+                        </div>
+                    </div>
+                `,
+                practice: `
+                    <p class="mb-4 text-slate-300">Nginx dagi oddiy sayt konfiguratsiyasi (<code>/etc/nginx/sites-available/default</code>):</p>
+                    <div class="bg-terminal p-4 rounded-lg shadow-lg font-mono text-sm code-block text-blue-300">
+                        <span class="text-emerald-400">server</span> {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-blue-400">listen</span> 80;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-blue-400">server_name</span> mening-saytim.uz;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-blue-400">root</span> /var/www/html;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-blue-400">index</span> index.html;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-emerald-400">location</span> / {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-blue-400">try_files</span> $uri $uri/ =404;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        }
+                    </div>
+                `,
+                simFunc: () => `
+                    <div class="flex justify-center items-center h-full max-w-3xl mx-auto gap-8">
+                        <!-- Users -->
+                        <div class="flex flex-col gap-2 relative h-64 w-24">
+                            <div id="req-1" class="absolute top-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-xs opacity-0">Req</div>
+                            <div id="req-2" class="absolute top-8 w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center text-xs opacity-0">Req</div>
+                            <div id="req-3" class="absolute top-16 w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-xs opacity-0">Req</div>
+                            <div id="req-4" class="absolute top-24 w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-xs opacity-0">Req</div>
+                            <div id="req-5" class="absolute top-32 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-xs opacity-0">Req</div>
+                        </div>
+
+                        <!-- Web Server Box -->
+                        <div class="bg-slate-800 p-6 rounded-xl border border-slate-600 w-64 text-center">
+                            <h3 class="font-bold text-xl mb-4" id="sim-server-title">Web Server</h3>
+                            <div class="bg-dark h-32 rounded border border-slate-700 flex flex-wrap gap-2 p-2 items-center justify-center" id="sim-server-core">
+                                <!-- Threads will appear here -->
+                            </div>
+                        </div>
+
+                        <!-- Controls -->
+                        <div class="flex flex-col gap-4 w-48">
+                            <button onclick="runServerSim('apache')" class="bg-red-600/20 text-red-500 border border-red-600 px-4 py-3 rounded hover:bg-red-600 hover:text-white transition font-bold">Apache usuli<br><span class="text-xs font-normal">Har biriga yangi Thread</span></button>
+                            <button onclick="runServerSim('nginx')" class="bg-green-600/20 text-green-500 border border-green-600 px-4 py-3 rounded hover:bg-green-600 hover:text-white transition font-bold">Nginx usuli<br><span class="text-xs font-normal">Bitta Worker loopi</span></button>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 11, title: "11. Reverse Proxy (Teskari proksi)", icon: "fa-exchange-alt",
+                theory: `
+                    <h3 class="text-xl font-bold text-blue-400 mb-2">Reverse Proxy nima?</h3>
+                    <p class="mb-4 text-slate-300">Uzoqdan kelayotgan trafikni qabul qilib, uni orqa fonda yashirinib yotgan (Backend) serverlarga taqsimlab beruvchi "qorovul" yoki "kotiba".</p>
+                    <div class="bg-slate-800 p-4 rounded-lg">
+                        <h4 class="text-emerald-400 font-bold mb-2">Nima uchun kerak?</h4>
+                        <ol class="list-decimal pl-5 space-y-2 text-sm text-slate-300">
+                            <li><strong>Load Balancing (Yuklamani taqsimlash):</strong> 1 ta server o'rniga 3 ta server ishlatsangiz, proksi kelgan trafikni teng bo'lib beradi.</li>
+                            <li><strong>Xavfsizlik:</strong> Haqiqiy serveringizning IP manzili internetga ko'rinmaydi. Hammasini proksi o'ziga oladi.</li>
+                            <li><strong>SSL Termination:</strong> SSL sertifikatni proksiga o'rnatib qo'ysangiz yetarli. Orqa tarafdagi serverlar sof HTTP da ishlashda davom etaveradi, CPU yutishmaydi.</li>
+                        </ol>
+                    </div>
+                `,
+                practice: `
+                    <p class="mb-4 text-slate-300">Nginx ni Reverse Proxy sifatida sozlash (Node.js backend uchun):</p>
+                    <div class="bg-terminal p-4 rounded-lg shadow-lg font-mono text-sm code-block text-blue-300">
+                        <span class="text-emerald-400">server</span> {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-blue-400">listen</span> 80;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-blue-400">server_name</span> api.saytim.uz;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-emerald-400">location</span> / {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-slate-500"># Trafikni 3000-portga burish</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-blue-400">proxy_pass</span> http://localhost:3000;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-blue-400">proxy_set_header</span> Host $host;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-blue-400">proxy_set_header</span> X-Real-IP $remote_addr;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        }
+                    </div>
+                `,
+                simFunc: () => `
+                    <div class="flex flex-col items-center justify-center h-full mt-8">
+                        <div class="flex w-full max-w-4xl justify-between items-center relative">
+                            <!-- Clients -->
+                            <div class="flex flex-col gap-4 z-10 w-24">
+                                <div id="rp-client-1" class="bg-blue-600 p-2 rounded text-center"><i class="fas fa-mobile-alt"></i></div>
+                                <div id="rp-client-2" class="bg-emerald-600 p-2 rounded text-center"><i class="fas fa-laptop"></i></div>
+                                <div id="rp-client-3" class="bg-purple-600 p-2 rounded text-center"><i class="fas fa-desktop"></i></div>
+                            </div>
+
+                            <!-- Reverse Proxy -->
+                            <div class="bg-slate-800 p-6 rounded-xl border border-blue-500 shadow-[0_0_30px_rgba(59,130,246,0.3)] z-10 text-center relative group">
+                                <h4 class="font-bold text-blue-400 mb-2">Nginx Proxy</h4>
+                                <i class="fas fa-random text-4xl text-slate-300"></i>
+                                <button onclick="runProxySim()" class="absolute -bottom-12 left-1/2 -translate-x-1/2 bg-blue-600 hover:bg-blue-500 px-4 py-1 rounded text-sm whitespace-nowrap">Trafik yuborish</button>
+                            </div>
+
+                            <!-- Backend Servers -->
+                            <div class="flex flex-col gap-4 z-10 w-48">
+                                <div class="bg-slate-700 p-3 rounded flex items-center justify-between border border-slate-600" id="rp-backend-1">
+                                    <span>Node.js #1</span><i class="fab fa-node-js text-green-500"></i>
+                                </div>
+                                <div class="bg-slate-700 p-3 rounded flex items-center justify-between border border-slate-600" id="rp-backend-2">
+                                    <span>Node.js #2</span><i class="fab fa-node-js text-green-500"></i>
+                                </div>
+                                <div class="bg-slate-700 p-3 rounded flex items-center justify-between border border-slate-600" id="rp-backend-3">
+                                    <span>Node.js #3</span><i class="fab fa-node-js text-green-500"></i>
+                                </div>
+                            </div>
+                            
+                            <!-- Animated Lines Area -->
+                            <div id="proxy-animation-area" class="absolute inset-0 pointer-events-none"></div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 12, title: "12. Cloudflare (CDN & Himoya)", icon: "fa-cloud",
+                theory: `
+                    <h3 class="text-xl font-bold text-orange-400 mb-2">Cloudflare nima?</h3>
+                    <p class="mb-4 text-slate-300">U internetdagi eng katta tarmoqlardan biri. Cloudflare sizning saytingiz (serveringiz) va foydalanuvchilar o'rtasida katta "Qalqon" bo'lib xizmat qiladi.</p>
+                    <ul class="list-disc pl-5 space-y-2 text-slate-300">
+                        <li><strong>CDN (Content Delivery Network):</strong> Saytingizdagi rasmlarni dunyo bo'ylab yuzlab serverlarida keshlab (nusxalab) saqlaydi. Yaponiyadan kirgan odam ma'lumotni Toshkentdagi serveringizdan emas, Yaponiyadagi Cloudflare serveridan oladi. Tezlik +100%.</li>
+                        <li><strong>DDoS Himoya:</strong> Xakerlar botnet orqali saytingizga soniyada 1 millionta so'rov yuborsa, Cloudflare bu botlarni "Men odamman (Captcha)" orqali to'xtatib qoladi. Serveringizgacha xavf yetib bormaydi.</li>
+                        <li><strong>SSL:</strong> Bepul xavfsizlik sertifikati taqdim etadi.</li>
+                    </ul>
+                `,
+                practice: `
+                    <p class="mb-4 text-slate-300">Buning uchun terminal kerak emas. Siz domen sotib olgan joyingiz (masalan, cctld.uz) paneliga kirib, Name Serverlarni o'zgartirasiz:</p>
+                    <div class="bg-terminal p-4 rounded-lg shadow-lg font-mono text-sm code-block text-slate-300">
+                        Eski NS1: ns1.eskixosting.uz<br>
+                        Eski NS2: ns2.eskixosting.uz<br><br>
+                        <span class="text-orange-400"># Cloudflarega o'tkazish uchun yangilaymiz:</span><br>
+                        Yangi NS1: <span class="text-emerald-400">arya.ns.cloudflare.com</span><br>
+                        Yangi NS2: <span class="text-emerald-400">bob.ns.cloudflare.com</span>
+                    </div>
+                `,
+                simFunc: () => `
+                    <div class="max-w-3xl mx-auto flex flex-col gap-8 h-full items-center justify-center">
+                        <div class="flex items-center justify-between w-full relative">
+                            <div class="text-center w-24">
+                                <i class="fas fa-users text-4xl text-blue-400"></i>
+                                <p class="text-sm mt-2 text-red-500 font-bold" id="cf-attack-text">DDoS Hujum!</p>
+                            </div>
+                            
+                            <div id="cf-shield" class="bg-orange-500 text-white w-24 h-24 rounded-full flex items-center justify-center text-3xl z-20 shadow-[0_0_30px_rgba(249,115,22,0.5)] transition-all transform hover:scale-105 cursor-pointer" onclick="toggleCloudflare()">
+                                <i class="fas fa-cloud"></i>
+                            </div>
+                            
+                            <div class="text-center w-24">
+                                <i class="fas fa-server text-4xl text-emerald-400"></i>
+                                <p class="text-sm mt-2">Sizning Server</p>
+                            </div>
+                            
+                            <!-- Attack lines -->
+                            <div id="cf-attack-area" class="absolute top-1/2 left-24 right-24 h-4 -translate-y-1/2 flex items-center pointer-events-none overflow-hidden z-10"></div>
+                        </div>
+                        
+                        <p class="text-center text-slate-400 text-sm">Cloudflare himoyasini yoqish/o'chirish uchun bulut belgisini bosing.</p>
+                        
+                        <!-- Server health bar -->
+                        <div class="w-full bg-slate-800 rounded-full h-4 relative overflow-hidden border border-slate-600">
+                            <div class="absolute inset-0 flex items-center justify-center text-[10px] z-10 font-bold mix-blend-difference">Server Yuklamasi (CPU)</div>
+                            <div id="cf-cpu-bar" class="bg-green-500 h-full w-[10%] transition-all duration-300"></div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 13, title: "13. Cloudflare Tunnel", icon: "fa-dungeon",
+                theory: `
+                    <h3 class="text-xl font-bold text-orange-400 mb-2">Qulfni buzmasdan ichkariga kirish</h3>
+                    <p class="mb-4 text-slate-300">Odatda veb-server ochish uchun serveringizning 80 va 443-portlarini ochiq (Public) qilib qo'yishingiz kerak. Bu esa xakerlarga port-skaner qilish imkonini beradi.</p>
+                    <p class="mb-4 text-slate-300"><strong>Cloudflare Tunnel (avvalgi nomi Argo Tunnel)</strong> nima qiladi? U sizning serveringiz ichidan Cloudflare'ga <em>chiqish (outbound)</em> ulanishini yaratadi. Serveringizdagi <strong>hamma kirish portlari (inbound) yopiq bo'ladi</strong>. Lekin sayt baribir ishlayveradi, chunki barcha trafik shu tayyor tunnel orqali serveringizga yetib boradi.</p>
+                `,
+                practice: `
+                    <p class="mb-4 text-slate-300">Tunnelni serverda o'rnatish va ishga tushirish:</p>
+                    <div class="bg-terminal p-4 rounded-lg shadow-lg font-mono text-sm code-block text-slate-300">
+                        <span class="text-slate-500"># 1. cloudflared dasturini o'rnatish</span><br>
+                        <span class="text-green-400">root@server:~#</span> apt install cloudflared<br><br>
+                        
+                        <span class="text-slate-500"># 2. Cloudflare tarmog'iga ulanish va tunnel yaratish</span><br>
+                        <span class="text-green-400">root@server:~#</span> cloudflared tunnel login<br>
+                        <span class="text-green-400">root@server:~#</span> cloudflared tunnel create mening-tunnelim<br><br>
+
+                        <span class="text-slate-500"># 3. Domen bilan 8080-portdagi local dasturni ulash</span><br>
+                        <span class="text-green-400">root@server:~#</span> cloudflared tunnel route dns mening-tunnelim app.saytim.uz<br>
+                        <span class="text-green-400">root@server:~#</span> cloudflared tunnel run --url http://localhost:8080 mening-tunnelim
+                    </div>
+                `,
+                simFunc: () => `
+                    <div class="text-center flex flex-col items-center justify-center h-full">
+                        <h3 class="text-lg mb-6">Xavfsiz Tunnel yaratish jarayoni</h3>
+                        <div class="flex justify-between items-center w-full max-w-4xl bg-slate-800 p-8 rounded-xl border border-slate-700 relative">
+                            
+                            <!-- Hacker outside -->
+                            <div class="absolute -top-12 left-1/4 text-center">
+                                <i class="fas fa-user-secret text-3xl text-red-500"></i>
+                                <p class="text-xs text-red-400">Port Scan</p>
+                            </div>
+
+                            <div class="text-center z-10 bg-orange-500/20 p-4 rounded-lg border border-orange-500">
+                                <i class="fas fa-cloud text-5xl text-orange-400 mb-2"></i>
+                                <p>Cloudflare Edge</p>
+                            </div>
+
+                            <div class="flex-1 relative h-8 mx-4">
+                                <!-- Blocked direct path -->
+                                <div class="absolute top-0 left-0 right-0 border-t-2 border-red-500 border-dashed h-4"></div>
+                                <i class="fas fa-times-circle text-red-500 absolute -top-3 left-1/2 -translate-x-1/2 text-xl bg-slate-800 px-2"></i>
+
+                                <!-- Secure Tunnel Path -->
+                                <div class="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-r from-orange-500/50 to-blue-500/50 rounded-full flex items-center justify-center overflow-hidden">
+                                    <div class="w-full h-1 bg-white/50 animate-pulse"></div>
+                                </div>
+                            </div>
+
+                            <div class="text-center z-10 bg-dark p-4 rounded-lg border-2 border-slate-600 relative overflow-hidden group">
+                                <div class="absolute inset-0 border-4 border-red-500 opacity-50 z-20 pointer-events-none hidden" id="firewall-block"></div>
+                                <i class="fas fa-server text-5xl text-blue-400 mb-2"></i>
+                                <p>Sizning Server</p>
+                                <div class="mt-2 text-xs bg-red-900/50 text-red-300 border border-red-700 rounded px-2">Barcha portlar yopiq</div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 17, title: "17. Firewall (Xavfsizlik Devori)", icon: "fa-shield-alt",
+                theory: `
+                    <h3 class="text-xl font-bold text-red-400 mb-2">Firewall nima?</h3>
+                    <p class="mb-4 text-slate-300">Serveringizga kiruvchi (Inbound) va chiquvchi (Outbound) trafikni nazorat qiluvchi raqamli chegara qorovuli. Siz "Faqat 80 va 443 portlarga ruxsat, qolgan hammasini yop" degan qoida yozasiz, u og'ishmay bajaradi.</p>
+                    <h4 class="text-emerald-400 font-bold mb-2">Linuxdagi asosiy vositalar:</h4>
+                    <ul class="list-disc pl-5 text-sm text-slate-300 space-y-1">
+                        <li><strong>iptables:</strong> Yadro darajasidagi eng asosiy, lekin biroz murakkab yoziladigan xavfsizlik devori.</li>
+                        <li><strong>UFW (Uncomplicated Firewall):</strong> Ubuntu'da default keladigan, iptables'ni inson tushunadigan tilda boshqaruvchi oson dastur.</li>
+                    </ul>
+                `,
+                practice: `
+                    <p class="mb-4 text-slate-300">UFW orqali serverni sozlash amaliyoti:</p>
+                    <div class="bg-terminal p-4 rounded-lg shadow-lg font-mono text-sm code-block">
+                        <span class="text-slate-500"># 1. SSH (22 port) uzilib qolmasligi uchun ruxsat berish (Juda muhim!)</span><br>
+                        <span class="text-green-400">root@server:~#</span> ufw allow ssh<br><br>
+                        
+                        <span class="text-slate-500"># 2. Veb server portlarini ochish</span><br>
+                        <span class="text-green-400">root@server:~#</span> ufw allow 80/tcp<br>
+                        <span class="text-green-400">root@server:~#</span> ufw allow 443/tcp<br><br>
+
+                        <span class="text-slate-500"># 3. Firewall'ni yoqish</span><br>
+                        <span class="text-green-400">root@server:~#</span> ufw enable<br>
+                        <span class="text-emerald-400">Firewall is active and enabled on system startup</span><br><br>
+
+                        <span class="text-slate-500"># Boshqa hamma portlar (masalan, ma'lumotlar bazasi 3306) avtomatik yopiq qoladi.</span>
+                    </div>
+                `,
+                simFunc: () => `
+                    <div class="flex gap-8 justify-center items-center h-full relative p-8 bg-slate-800 rounded-xl border border-slate-700 max-w-4xl mx-auto">
+                        
+                        <!-- Attackers / Users -->
+                        <div class="flex flex-col gap-8 w-32 relative">
+                            <div class="bg-blue-900/50 p-3 rounded flex items-center justify-between border border-blue-500" id="fw-user">
+                                <i class="fas fa-globe text-blue-400 text-2xl"></i> HTTP
+                            </div>
+                            <div class="bg-red-900/50 p-3 rounded flex items-center justify-between border border-red-500" id="fw-hacker">
+                                <i class="fas fa-user-secret text-red-500 text-2xl"></i> DB
+                            </div>
+                        </div>
+
+                        <!-- Firewall Wall -->
+                        <div class="w-8 h-48 bg-gradient-to-b from-red-500 to-red-900 rounded-lg relative flex items-center justify-center shadow-[0_0_20px_rgba(239,68,68,0.5)]">
+                            <div class="absolute -left-2 w-12 h-12 bg-dark rounded border-2 border-red-500 flex items-center justify-center top-4" id="fw-port-80">
+                                <div class="w-6 h-6 bg-red-500 rounded-full transition-colors" id="fw-hole-80"></div>
+                            </div>
+                            <div class="absolute -left-2 w-12 h-12 bg-dark rounded border-2 border-red-500 flex items-center justify-center bottom-4" id="fw-port-3306">
+                                <div class="w-6 h-6 bg-red-500 rounded-full transition-colors" id="fw-hole-3306"></div>
+                            </div>
+                            <span class="text-white font-bold -rotate-90 whitespace-nowrap opacity-50 tracking-widest">FIREWALL</span>
+                        </div>
+
+                        <!-- Server -->
+                        <div class="w-48 bg-dark p-6 rounded-xl border border-slate-600 text-center z-10">
+                            <i class="fas fa-server text-6xl text-slate-400 mb-4"></i>
+                            <p class="font-bold text-lg text-white">Sizning Server</p>
+                        </div>
+                        
+                        <!-- Action Area -->
+                        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-4 bg-dark p-2 rounded-lg border border-slate-600">
+                            <button onclick="fwSimToggle(80)" class="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded text-sm text-blue-400 font-bold border border-blue-900">Port 80 (HTTP) <span id="fw-btn-80">Yopiq</span></button>
+                            <button onclick="fwSimToggle(3306)" class="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded text-sm text-red-400 font-bold border border-red-900">Port 3306 (DB) <span id="fw-btn-3306">Yopiq</span></button>
+                            <button onclick="fwSendTraffic()" class="bg-emerald-600 hover:bg-emerald-500 px-4 py-2 rounded text-sm text-white font-bold ml-4"><i class="fas fa-play mr-1"></i> Sinash</button>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 19, title: "19. Rate Limiting", icon: "fa-tachometer-alt",
+                theory: `
+                    <h3 class="text-xl font-bold text-yellow-400 mb-2">Rate Limiting nima?</h3>
+                    <p class="mb-4 text-slate-300">"Tezlikni cheklash". Agar bitta IP manzil bir soniya ichida serverga 100 marta so'rov yuborsa, u katta ehtimol bilan bot yoki hujumchidir (DDoS). Bu server resurslarini yeb qo'yadi.</p>
+                    <p class="text-slate-300">Rate Limiting orqali qoida o'rnatamiz: <em>"1 ta foydalanuvchiga 1 daqiqada faqat 60 ta so'rov ruxsat. Undan oshsa <strong>HTTP 429 (Too Many Requests)</strong> xatoligini ber".</em></p>
+                `,
+                practice: `
+                    <p class="mb-4 text-slate-300">Nginx da Rate Limit sozlash misoli:</p>
+                    <div class="bg-terminal p-4 rounded-lg shadow-lg font-mono text-sm code-block text-blue-300">
+                        <span class="text-slate-500"># 1. Cheklov zonasini yaratish (har bir IP ga sekuntiga 5 ta ruxsat)</span><br>
+                        <span class="text-blue-400">limit_req_zone</span> $binary_remote_addr <span class="text-blue-400">zone</span>=mylimit:10m <span class="text-blue-400">rate</span>=5r/s;<br><br>
+
+                        <span class="text-emerald-400">server</span> {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-emerald-400">location</span> /login/ {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-slate-500"># 2. Shu zonani qayerda ishlatishni ko'rsatish (burst = +10 ta gacha o'tkazib yuborish mumkin)</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-blue-400">limit_req</span> zone=mylimit burst=10 nodelay;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;proxy_pass http://backend;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        }
+                    </div>
+                `,
+                simFunc: () => `
+                    <div class="flex flex-col items-center max-w-xl mx-auto bg-slate-800 p-8 rounded-xl border border-slate-700 shadow-2xl relative">
+                        
+                        <div class="flex justify-between w-full mb-8 items-end border-b border-slate-600 pb-4">
+                            <div>
+                                <h4 class="text-slate-400 text-sm">Ruxsat etilgan tezlik:</h4>
+                                <p class="text-xl font-bold text-emerald-400">2 ta so'rov / soniya</p>
+                            </div>
+                            <div class="text-right">
+                                <h4 class="text-slate-400 text-sm">Server holati:</h4>
+                                <div id="rl-server-status" class="bg-green-500/20 text-green-400 border border-green-500 px-3 py-1 rounded text-sm inline-block">200 OK</div>
+                            </div>
+                        </div>
+
+                        <!-- Burst Tank -->
+                        <div class="w-full bg-dark h-8 rounded-full overflow-hidden border border-slate-600 mb-8 relative">
+                            <div id="rl-tank" class="bg-blue-500 h-full w-0 transition-all duration-100 ease-out"></div>
+                            <div class="absolute inset-0 flex items-center justify-center text-xs font-bold text-white/50 pointer-events-none">So'rovlar buferi</div>
+                        </div>
+
+                        <button onclick="rlSimulateClick()" id="rl-btn" class="bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-500 hover:to-emerald-500 text-white w-48 h-48 rounded-full shadow-[0_0_40px_rgba(59,130,246,0.5)] transform hover:scale-105 active:scale-95 transition flex items-center justify-center flex-col gap-2">
+                            <i class="fas fa-mouse-pointer text-4xl"></i>
+                            <span class="font-bold text-xl">So'rov yuborish</span>
+                            <span class="text-xs opacity-70">(Tez-tez bosing)</span>
+                        </button>
+                        
+                        <div id="rl-msg" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-4xl font-bold text-red-500 drop-shadow-lg opacity-0 pointer-events-none transition">429 TOO MANY REQUESTS</div>
+                    </div>
+                `
+            },
+            {
+                id: 20, title: "20. Fail2Ban", icon: "fa-ban",
+                theory: `
+                    <h3 class="text-xl font-bold text-red-500 mb-2">Avtomatlashtirilgan Qorovul</h3>
+                    <p class="mb-4 text-slate-300">Serveringiz internetga ulangach, bir necha daqiqa o'tiboq xitoylik yoki rossiyalik xaker botlar SSH, FTP parolingizni buzishga (Brute-force) urinib ko'ra boshlaydi.</p>
+                    <p class="text-slate-300"><strong>Fail2Ban qanday ishlaydi?</strong> U serverdagi loglarni (ro'yxatdan o'tish yozuvlari) doimiy o'qib turadi. Agar bitta IP manzil 3 marta noto'g'ri parol yozsa, Fail2Ban darhol borib Firewall (iptables) ga bu IP ni qora ro'yxatga (Ban) qo'shib qo'yadi. Masalan, 1 soatga bloklaydi.</p>
+                `,
+                practice: `
+                    <p class="mb-4 text-slate-300">Fail2Ban konfiguratsiya faylidan misol (<code>/etc/fail2ban/jail.local</code>):</p>
+                    <div class="bg-terminal p-4 rounded-lg shadow-lg font-mono text-sm code-block text-slate-300">
+                        [ssh]<br>
+                        enabled  = true<br>
+                        port     = 22<br>
+                        filter   = sshd<br>
+                        logpath  = /var/log/auth.log<br>
+                        <span class="text-yellow-400">maxretry = 3</span> <span class="text-slate-500"># 3 marta xato qilsa</span><br>
+                        <span class="text-red-400">bantime  = 3600</span> <span class="text-slate-500"># 1 soatga (3600 sek) bloklanadi</span>
+                    </div>
+                `,
+                simFunc: () => `
+                    <div class="flex justify-center items-center h-full pt-8">
+                        <div class="bg-slate-800 p-8 rounded-xl shadow-2xl border border-slate-700 w-full max-w-md relative overflow-hidden">
+                            
+                            <div id="f2b-lock-screen" class="absolute inset-0 bg-red-900/90 z-20 flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500">
+                                <i class="fas fa-ban text-6xl text-red-500 mb-4"></i>
+                                <h3 class="text-2xl font-bold text-white mb-2">IP BLOKLANDI</h3>
+                                <p class="text-red-200 text-sm">Fail2Ban sizni ban qildi.</p>
+                                <button onclick="f2bReset()" class="mt-6 border border-white px-4 py-1 rounded hover:bg-white hover:text-red-900 transition">Qayta urinish</button>
+                            </div>
+
+                            <div class="text-center mb-6">
+                                <i class="fas fa-server text-4xl text-blue-400 mb-2"></i>
+                                <h3 class="text-xl font-bold">SSH Login</h3>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="text-sm text-slate-400 block mb-1">Foydalanuvchi:</label>
+                                    <input type="text" value="root" class="w-full bg-dark border border-slate-600 rounded px-3 py-2 text-white" readonly>
+                                </div>
+                                <div>
+                                    <label class="text-sm text-slate-400 block mb-1">Parol:</label>
+                                    <input type="password" id="f2b-pass" class="w-full bg-dark border border-slate-600 rounded px-3 py-2 text-white outline-none focus:border-blue-500" placeholder="admin123 deb yozing">
+                                </div>
+                                <button onclick="f2bLogin()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 rounded transition">Kirish</button>
+                            </div>
+                            
+                            <div class="mt-6 bg-dark p-3 rounded border border-slate-700">
+                                <p class="text-xs text-slate-500 mb-2">Fail2Ban Log:</p>
+                                <div id="f2b-log" class="text-xs font-mono text-yellow-500 h-16 flex flex-col gap-1 justify-end"></div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 21, title: "21. Docker / Konteynerlashtirish", icon: "fa-box-open",
+                theory: `
+                    <h3 class="text-xl font-bold text-blue-400 mb-2">Mening kompyuterimda ishlayotgandi-ku?!</h3>
+                    <p class="mb-4 text-slate-300">Dasturchi sayt yaratib uni serverga yuklasa, serverdagi operatsion tizim yoki Node.js versiyasi boshqachaligi sababli sayt ishlamay qoladi. </p>
+                    <p class="text-slate-300"><strong>Docker</strong> dasturni, uning barcha kutubxonalarini (dependencies) va kerakli sozlamalarni bitta "Konteyner" qutisiga qamab qo'yadi. Bu quti Mac'da ham, Linux'da ham, Windows'da ham bir xil ishlaydi.</p>
+                    <div class="grid grid-cols-2 gap-2 mt-4">
+                        <div class="bg-slate-800 p-3 rounded">
+                            <span class="text-emerald-400 font-bold">Image (Rasm):</span> Tayyor shablon, retsept (masalan Ubuntu + Node.js).
+                        </div>
+                        <div class="bg-slate-800 p-3 rounded">
+                            <span class="text-blue-400 font-bold">Container:</span> O'sha Image'ning tirik, ishlayotgan holati.
+                        </div>
+                    </div>
+                `,
+                practice: `
+                    <p class="mb-4 text-slate-300">Dockerfile orqali dasturni qadoqlash:</p>
+                    <div class="bg-terminal p-4 rounded-lg shadow-lg font-mono text-sm code-block text-slate-300">
+                        <span class="text-slate-500"># 1. Asos qilib Node.js rasmini olamiz</span><br>
+                        <span class="text-blue-400">FROM</span> node:18-alpine<br><br>
+                        <span class="text-slate-500"># 2. Ishchi papkani yaratamiz</span><br>
+                        <span class="text-blue-400">WORKDIR</span> /app<br><br>
+                        <span class="text-slate-500"># 3. Fayllarni ko'chiramiz va kutubxonalarni yuklaymiz</span><br>
+                        <span class="text-blue-400">COPY</span> package.json .<br>
+                        <span class="text-blue-400">RUN</span> npm install<br>
+                        <span class="text-blue-400">COPY</span> . .<br><br>
+                        <span class="text-slate-500"># 4. Dasturni yurgizamiz</span><br>
+                        <span class="text-blue-400">CMD</span> ["node", "app.js"]
+                    </div>
+                `,
+                simFunc: () => `
+                    <div class="flex max-w-4xl mx-auto h-full items-center justify-between gap-8 pt-8 relative">
+                        <!-- Host System Area -->
+                        <div class="flex-1 flex flex-col gap-4">
+                            <h3 class="text-center font-bold text-slate-400 mb-2">Loyihangiz qismlari</h3>
+                            
+                            <div class="flex gap-4">
+                                <div id="docker-item-1" class="bg-yellow-500/20 text-yellow-400 border border-yellow-500 p-4 rounded flex-1 text-center cursor-pointer hover:bg-yellow-500/40 transition" onclick="packDocker('node', 'docker-item-1')">
+                                    <i class="fab fa-node-js text-3xl mb-2"></i><p>Node 18</p>
+                                </div>
+                                <div id="docker-item-2" class="bg-blue-500/20 text-blue-400 border border-blue-500 p-4 rounded flex-1 text-center cursor-pointer hover:bg-blue-500/40 transition" onclick="packDocker('code', 'docker-item-2')">
+                                    <i class="fas fa-code text-3xl mb-2"></i><p>Sizning Kod</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-4">
+                                <div id="docker-item-3" class="bg-purple-500/20 text-purple-400 border border-purple-500 p-4 rounded flex-1 text-center cursor-pointer hover:bg-purple-500/40 transition" onclick="packDocker('npm', 'docker-item-3')">
+                                    <i class="fab fa-npm text-3xl mb-2"></i><p>Modullar</p>
+                                </div>
+                                <div id="docker-item-4" class="bg-slate-500/20 text-slate-400 border border-slate-500 p-4 rounded flex-1 text-center cursor-pointer hover:bg-slate-500/40 transition" onclick="packDocker('os', 'docker-item-4')">
+                                    <i class="fab fa-linux text-3xl mb-2"></i><p>Alpine OS</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Arrow -->
+                        <div class="text-slate-500 text-3xl">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+
+                        <!-- Container Area -->
+                        <div class="flex-1">
+                            <h3 class="text-center font-bold text-blue-400 mb-2">Docker Konteyner</h3>
+                            <div class="bg-[#1d4ed8]/20 border-2 border-dashed border-blue-500 rounded-xl h-64 p-4 relative flex flex-col items-center justify-center transition-all duration-500" id="docker-container-box">
+                                <i class="fab fa-docker text-6xl text-blue-500/30 absolute" id="docker-logo-bg"></i>
+                                <div class="grid grid-cols-2 gap-2 z-10 w-full" id="docker-packed-items">
+                                    <!-- Packed items go here -->
+                                </div>
+                                <div id="docker-success-msg" class="absolute inset-0 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-2xl opacity-0 scale-50 transition-all duration-500">
+                                    <div class="text-center">
+                                        <i class="fab fa-docker text-6xl mb-2"></i><br>
+                                        Konteyner Tayyor!
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 22, title: "22. Kubernetes (K8s)", icon: "fa-ship",
+                theory: `
+                    <h3 class="text-xl font-bold text-blue-400 mb-2">Konteynerlar Kapitani</h3>
+                    <p class="mb-4 text-slate-300">Tasavvur qiling, saytingiz juda mashhur bo'lib ketdi. Bitta Docker konteyner o'rniga sizga endi 50 ta konteyner kerak. Ulardan qaysidir biri xato berib o'chib qolsa, kim uni qayta ishga tushiradi? Yangi versiya chiqqanda 50 tasini qanday qilib birma-bir o'chirmasdan yangilaymiz?</p>
+                    <p class="text-slate-300"><strong>Kubernetes (K8s)</strong> - bu konteynerlarni avtomatik boshqaruvchi tizim (Orchestration). U o'lib qolgan konteynerlarni tiriltiradi, yuklama oshganda o'zi avtomatik ko'paytiradi (Auto-scaling).</p>
+                    <ul class="mt-4 text-sm text-slate-400 list-disc pl-5">
+                        <li><strong>Pod:</strong> K8s dagi eng kichik birlik (ichida 1 ta yoki bir nechta docker konteyner yashaydi).</li>
+                        <li><strong>Node:</strong> Bitta haqiqiy kompyuter/server.</li>
+                        <li><strong>Cluster:</strong> Nodelar yig'indisi.</li>
+                    </ul>
+                `,
+                practice: `
+                    <p class="mb-4 text-slate-300">Kubectl orqali klasterda Pod larni ko'rish va yangi nginx ishga tushirish:</p>
+                    <div class="bg-terminal p-4 rounded-lg shadow-lg font-mono text-sm code-block text-slate-300">
+                        <span class="text-green-400">admin@k8s:~#</span> kubectl get nodes<br>
+                        <span class="text-slate-400">NAME         STATUS   ROLES    AGE   VERSION<br>
+                        worker-1     Ready    <none>   10d   v1.28.0<br>
+                        worker-2     Ready    <none>   10d   v1.28.0</span><br><br>
+                        
+                        <span class="text-green-400">admin@k8s:~#</span> kubectl create deployment mening-saytim --image=nginx<br>
+                        <span class="text-emerald-400">deployment.apps/mening-saytim created</span><br><br>
+
+                        <span class="text-green-400">admin@k8s:~#</span> kubectl scale deployment mening-saytim --replicas=3<br>
+                        <span class="text-emerald-400">deployment.apps/mening-saytim scaled</span> <span class="text-slate-500"># Nginx endi 3 ta nusxada ishlayapti!</span>
+                    </div>
+                `,
+                simFunc: () => `
+                    <div class="max-w-4xl mx-auto h-full flex flex-col items-center">
+                        <div class="flex gap-4 mb-8">
+                            <button onclick="k8sScale(1)" class="bg-blue-600 px-4 py-2 rounded text-white font-bold hover:bg-blue-500">Traffic (Normal)</button>
+                            <button onclick="k8sScale(3)" class="bg-yellow-600 px-4 py-2 rounded text-white font-bold hover:bg-yellow-500">Traffic (O'rta)</button>
+                            <button onclick="k8sScale(6)" class="bg-red-600 px-4 py-2 rounded text-white font-bold hover:bg-red-500">Traffic (Yuqori!)</button>
+                        </div>
+
+                        <div class="w-full bg-slate-800 p-6 rounded-xl border border-blue-500/50 relative min-h-[250px]">
+                            <h3 class="absolute top-[-15px] left-8 bg-blue-900 border border-blue-500 px-4 py-1 rounded text-blue-300 font-bold flex items-center gap-2"><i class="fas fa-ship"></i> Kubernetes Klasteri</h3>
+                            
+                            <div class="flex flex-wrap gap-4 mt-4 justify-center transition-all duration-500" id="k8s-pods-area">
+                                <!-- Pods will be generated here -->
+                                <div class="w-20 h-20 bg-blue-500/20 border-2 border-blue-500 rounded-lg flex flex-col items-center justify-center relative overflow-hidden pod-enter">
+                                    <i class="fab fa-docker text-blue-400 text-2xl"></i>
+                                    <span class="text-[10px] mt-1">Pod-1</span>
+                                    <div class="absolute inset-0 bg-emerald-500 opacity-20 pointer-events-none pulse-bg"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-center text-slate-400 text-sm mt-4">K8s yuklama oshganda (Auto-scaling) avtomatik ravishda yangi pod (konteyner nusxalarini) yaratadi.</p>
+                        <style>
+                            @keyframes popIn { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+                            .pod-enter { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+                            @keyframes pulseBg { 0% { opacity: 0.1; } 50% { opacity: 0.3; } 100% { opacity: 0.1; } }
+                            .pulse-bg { animation: pulseBg 2s infinite; }
+                        </style>
+                    </div>
+                `
+            },
+            {
+                id: 23, title: "23. API, JWT, .env xavfsizlik", icon: "fa-key",
+                theory: `
+                    <h3 class="text-xl font-bold text-yellow-400 mb-2">Backend Xavfsizligi va Aloqa</h3>
+                    <ul class="space-y-4 text-slate-300">
+                        <li class="bg-slate-800 p-4 rounded border-l-2 border-emerald-500"><strong>API (Application Programming Interface):</strong> Dasturlar (Front-end va Back-end yoki ikkita server) bir-biri bilan JSON formatida tillashishi uchun "darvoza". REST va GraphQL eng mashhur turlari.</li>
+                        
+                        <li class="bg-slate-800 p-4 rounded border-l-2 border-blue-500"><strong>JWT (JSON Web Token):</strong> Saytga login qilganingizda server sizga beradigan maxsus elektron pasport. Unda "Bu Falonchiyev, Admin huquqiga ega" degan yozuv shifrlangan bo'ladi. Har bir so'rovda shu pasportni ko'rsatasiz.</li>
+                        
+                        <li class="bg-slate-800 p-4 rounded border-l-2 border-red-500"><strong>.env fayl:</strong> Ma'lumotlar bazasi parollari, API kalitlari (secret keys) saqlanadigan xavfsiz joy. Bu fayl hech qachon Github'ga yuklanmasligi (.gitignore) va brauzerga ochiq bo'lmasligi shart.</li>
+                    </ul>
+                `,
+                practice: `
+                    <p class="mb-4 text-slate-300">JWT Token qanday yuboriladi (Header orqali):</p>
+                    <div class="bg-terminal p-4 rounded-lg shadow-lg font-mono text-sm code-block text-slate-300">
+                        GET /api/v1/users/profile HTTP/1.1<br>
+                        Host: api.mysite.com<br>
+                        <span class="text-yellow-400">Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM...</span><br>
+                        Accept: application/json<br>
+                        <br>
+                        <span class="text-slate-500"># .env fayl namunasi:</span><br>
+                        <span class="text-emerald-400">DB_HOST</span>=localhost<br>
+                        <span class="text-emerald-400">DB_PASS</span>=SuperMaxfiyParol123!<br>
+                        <span class="text-emerald-400">JWT_SECRET</span>=jk23h4j23h4gj23hg4jh23g4jh23
+                    </div>
+                `,
+                simFunc: () => `
+                    <div class="flex items-center justify-center gap-8 h-full">
+                        
+                        <!-- Client -->
+                        <div class="bg-slate-800 p-6 rounded-xl border border-slate-600 text-center w-48 relative z-10">
+                            <i class="fas fa-mobile-alt text-5xl text-blue-400 mb-4"></i>
+                            <h4 class="font-bold">Mobil Ilova</h4>
+                            <div id="jwt-token-display" class="mt-4 bg-dark text-[10px] font-mono p-2 rounded text-yellow-400 truncate opacity-30 border border-slate-700 h-8">Token yo'q</div>
+                        </div>
+
+                        <!-- Mid Space -->
+                        <div class="flex flex-col gap-4 relative w-32 h-32 justify-center items-center">
+                            <button onclick="jwtLogin()" id="jwt-btn-login" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded text-white text-sm font-bold w-full transition">1. Login qilish</button>
+                            <button onclick="jwtGetData()" id="jwt-btn-data" class="bg-emerald-600 hover:bg-emerald-500 px-4 py-2 rounded text-white text-sm font-bold w-full opacity-50 cursor-not-allowed transition" disabled>2. Ma'lumot olish</button>
+                            
+                            <div id="jwt-packet" class="absolute left-1/2 top-1/2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center hidden z-20 shadow-[0_0_15px_rgba(250,204,21,0.6)] text-black text-[10px]"><i class="fas fa-key"></i></div>
+                        </div>
+
+                        <!-- Server -->
+                        <div class="bg-slate-800 p-6 rounded-xl border border-emerald-500/50 shadow-[0_0_30px_rgba(16,185,129,0.1)] text-center w-48 relative z-10">
+                            <i class="fas fa-server text-5xl text-emerald-400 mb-4"></i>
+                            <h4 class="font-bold">API Server</h4>
+                            <div class="mt-4 bg-dark text-xs p-2 rounded text-slate-400 border border-slate-700 min-h-[40px] flex items-center justify-center" id="jwt-server-msg">
+                                Kutmoqda...
+                            </div>
+                        </div>
+                    </div>
+                `
+            }
+        ];
+
+        let currentTopicId = 1;
+        let currentTab = 'theory';
+
+        // Initialize Application
+        function init() {
+            renderSidebar();
+            selectTopic(1);
+        }
+
+        function renderSidebar() {
+            const sidebar = document.getElementById('sidebar-menu');
+            sidebar.innerHTML = '';
+            
+            topics.forEach(topic => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left px-4 py-3 rounded-lg transition-all flex items-center gap-3 text-sm font-medium ${topic.id === currentTopicId ? 'bg-primary/20 text-blue-400 border border-primary/50' : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`;
+                btn.innerHTML = `<i class="fas ${topic.icon} w-5 text-center"></i> ${topic.title}`;
+                btn.onclick = () => selectTopic(topic.id);
+                btn.id = `nav-btn-${topic.id}`;
+                sidebar.appendChild(btn);
+            });
+        }
+
+        function selectTopic(id) {
+            currentTopicId = id;
+            
+            // Update Sidebar UI
+            document.querySelectorAll('#sidebar-menu button').forEach(btn => {
+                btn.className = 'w-full text-left px-4 py-3 rounded-lg transition-all flex items-center gap-3 text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-slate-200';
+            });
+            const activeBtn = document.getElementById(`nav-btn-${id}`);
+            if(activeBtn) {
+                activeBtn.className = 'w-full text-left px-4 py-3 rounded-lg transition-all flex items-center gap-3 text-sm font-medium bg-primary/20 text-blue-400 border border-primary/50';
+                activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+
+            const topicData = topics.find(t => t.id === id);
+            
+            // Update Header Title with simple animation refresh
+            const titleEl = document.getElementById('topic-title');
+            titleEl.classList.remove('animate-slide-in');
+            void titleEl.offsetWidth; // trigger reflow
+            titleEl.innerHTML = `<i class="fas ${topicData.icon} mr-2 text-primary"></i> ${topicData.title}`;
+            titleEl.classList.add('animate-slide-in');
+
+            // Update footer counter
+            document.getElementById('topic-counter').innerText = `${topics.findIndex(t=>t.id===id) + 1} / ${topics.length}`;
+
+            // Reset tab if simulation doesn't exist? (All have it in this dataset)
+            renderContent();
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // UI Update for tabs
+            ['theory', 'practice', 'simulation'].forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                if(t === tab) {
+                    btn.className = 'px-4 py-2 rounded-md text-sm font-medium transition-all bg-primary text-white shadow';
+                } else {
+                    btn.className = 'px-4 py-2 rounded-md text-sm font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-700';
+                }
+            });
+
+            renderContent();
+        }
+
+        function renderContent() {
+            const area = document.getElementById('content-area');
+            const topicData = topics.find(t => t.id === currentTopicId);
+            
+            area.innerHTML = '';
+            
+            // Add fade in effect
+            area.classList.remove('animate-slide-in');
+            void area.offsetWidth;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'animate-slide-in h-full';
+
+            if (currentTab === 'theory') {
+                contentDiv.innerHTML = `<div class="max-w-4xl">${topicData.theory}</div>`;
+            } else if (currentTab === 'practice') {
+                contentDiv.innerHTML = `<div class="max-w-4xl">${topicData.practice}</div>`;
+            } else if (currentTab === 'simulation') {
+                contentDiv.innerHTML = `<div class="h-full min-h-[400px] flex items-center justify-center bg-darker rounded-xl border border-slate-800 p-4 relative overflow-hidden">${topicData.simFunc()}</div>`;
+            }
+
+            area.appendChild(contentDiv);
+        }
+
+        function prevTopic() {
+            const currentIndex = topics.findIndex(t => t.id === currentTopicId);
+            if (currentIndex > 0) selectTopic(topics[currentIndex - 1].id);
+        }
+
+        function nextTopic() {
+            const currentIndex = topics.findIndex(t => t.id === currentTopicId);
+            if (currentIndex < topics.length - 1) selectTopic(topics[currentIndex + 1].id);
+        }
+
+        /* ================== SIMULATION LOGIC ================== */
+
+        // Sim 1: Protocol
+        function simProtocol(type) {
+            const line = document.getElementById('protocol-line');
+            const packet = document.getElementById('protocol-packet');
+            const result = document.getElementById('protocol-result');
+            
+            packet.classList.remove('hidden');
+            packet.style.left = '24px';
+            packet.style.transition = 'none';
+            void packet.offsetWidth;
+            
+            packet.style.transition = 'all 1s ease-in-out';
+            packet.style.left = 'calc(100% - 48px)';
+            
+            setTimeout(() => {
+                if(type === 'wrong') {
+                    result.innerHTML = `<span class="text-red-500"><i class="fas fa-times"></i> Xato: Server "Abra-kadabra" ni tushunmadi!</span>`;
+                    packet.classList.add('hidden');
+                } else {
+                    result.innerHTML = `<span class="text-green-500"><i class="fas fa-check"></i> Ajoyib! Ulanish TCP/IP orqali o'rnatildi.</span>`;
+                    packet.classList.add('hidden');
+                }
+            }, 1000);
+        }
+
+        // Sim 2: HTTPS
+        function runHttpsSim(type) {
+            const msg = document.getElementById('https-msg');
+            const status = document.getElementById('https-status');
+            
+            msg.style.transition = 'none';
+            msg.style.left = '0%';
+            msg.style.opacity = '1';
+            
+            if(type === 'http') {
+                msg.className = "absolute left-0 bg-blue-500 text-white px-3 py-1 rounded text-sm transition-all duration-[3000ms] ease-linear";
+                msg.innerText = "Parol: 12345";
+                status.innerHTML = `<span class="text-red-400">HTTP: Xaker sizning parolingizni ochiq holda ko'rdi!</span>`;
+            } else {
+                msg.className = "absolute left-0 bg-emerald-600 text-white px-3 py-1 rounded text-sm transition-all duration-[3000ms] ease-linear flex items-center gap-1";
+                msg.innerHTML = `<i class="fas fa-lock"></i> *&^$#@!`;
+                status.innerHTML = `<span class="text-emerald-400">HTTPS: Xabar shifrlangan. Xaker uni o'qiy olmaydi.</span>`;
+            }
+
+            void msg.offsetWidth;
+            msg.style.left = '85%';
+            
+            setTimeout(() => {
+                msg.style.opacity = '0';
+                if(type === 'https') {
+                    // Turn back to readable on server
+                    msg.innerHTML = "Parol: 12345";
+                }
+            }, 2900);
+        }
+
+        // Sim 3: HTTP Log
+        function httpSim(method, code) {
+            const logArea = document.getElementById('http-log');
+            if(logArea.innerText.includes('so\'rov yuborish')) logArea.innerHTML = '';
+            
+            let color = 'text-green-400';
+            if(code >= 400) color = 'text-red-400';
+            if(code === 404) color = 'text-yellow-400';
+
+            const logEntry = document.createElement('div');
+            logEntry.className = "border-b border-slate-700 pb-2 mb-2";
+            logEntry.innerHTML = `
+                <div class="flex justify-between text-slate-300">
+                    <span>> ${method} /api/users HTTP/1.1</span>
+                    <span>Host: api.sayt.uz</span>
+                </div>
+                <div class="flex justify-between ${color} mt-1">
+                    <span>< HTTP/1.1 ${code} ${code===200?'OK':code===201?'Created':code===404?'Not Found':'Internal Server Error'}</span>
+                    <span>${Math.floor(Math.random()*50 + 10)}ms</span>
+                </div>
+            `;
+            logArea.prepend(logEntry);
+        }
+
+        // Sim 4: FTP
+        function uploadFtp() {
+            const barContainer = document.getElementById('ftp-progress-container');
+            const bar = document.getElementById('ftp-progress');
+            const status = document.getElementById('ftp-status');
+            const serverFiles = document.getElementById('server-files');
+            
+            barContainer.classList.remove('hidden');
+            bar.style.width = '0%';
+            
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 15;
+                if(progress > 100) progress = 100;
+                bar.style.width = progress + '%';
+                status.innerText = `Yuklanmoqda... ${Math.floor(progress)}%`;
+                
+                if(progress === 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        barContainer.classList.add('hidden');
+                        const newFile = document.createElement('div');
+                        newFile.className = "bg-blue-600 p-2 rounded text-white flex items-center";
+                        newFile.innerHTML = `<i class="fas fa-file-archive mr-2"></i>loyha.zip (50MB)`;
+                        serverFiles.appendChild(newFile);
+                    }, 500);
+                }
+            }, 300);
+        }
+
+        // Sim 5: SSH
+        function handleSsh(e) {
+            if(e.key === 'Enter') {
+                const val = e.target.value.trim();
+                const term = document.getElementById('ssh-terminal');
+                e.target.disabled = true;
+                
+                if(val === 'ssh root@server' || val.startsWith('ssh root@')) {
+                    term.innerHTML += `<br><span class="text-slate-400">The authenticity of host 'remote-server' can't be established.</span><br>`;
+                    setTimeout(() => {
+                        term.innerHTML += `<span class="text-slate-400">Warning: Permanently added 'remote-server' to the list of known hosts.</span><br>`;
+                        term.innerHTML += `<span class="text-yellow-400">root@remote-server's password: </span>`;
+                        setTimeout(() => {
+                            term.innerHTML += `<br><br><span class="text-emerald-400">Welcome to Ubuntu 22.04 LTS (GNU/Linux 5.15 x86_64)</span><br><br>`;
+                            term.innerHTML += `<span class="text-purple-400 font-bold">root@remote-server:~#</span> <span class="animate-pulse">_</span>`;
+                        }, 1000);
+                    }, 500);
+                } else {
+                    term.innerHTML += `<br><span class="text-red-400">Command not found or wrong format. Type: ssh root@server</span><br>`;
+                    term.innerHTML += `<div class="text-green-400 mt-2">user@laptop:~$ <input type="text" class="bg-transparent border-none outline-none text-white w-64" onkeypress="handleSsh(event)" autofocus></div>`;
+                    setTimeout(() => term.querySelector('input').focus(), 10);
+                }
+            }
+        }
+
+        // Sim 6: SMTP
+        function animateMail() {
+            const env = document.getElementById('sim-envelope');
+            env.style.transition = 'none';
+            env.style.left = '10%';
+            env.style.opacity = '1';
+            
+            void env.offsetWidth;
+            
+            env.style.transition = 'all 1.5s ease-in-out';
+            env.style.left = '50%';
+            env.style.transform = 'translate(-50%, -50%) scale(1.5)';
+            
+            setTimeout(() => {
+                env.style.left = '90%';
+                env.style.transform = 'translate(-50%, -50%) scale(1)';
+                setTimeout(() => { env.style.opacity = '0'; }, 1000);
+            }, 1500);
+        }
+
+        // Sim 7: DNS
+        function runDnsSim() {
+            const input = document.getElementById('dns-input').value;
+            const log = document.getElementById('dns-log');
+            const dnsIcon = document.getElementById('dns-server-icon');
+            const targetIcon = document.getElementById('dns-target-icon');
+            
+            if(!input) return;
+            
+            log.innerText = "Kesh tekshirilmoqda...";
+            dnsIcon.classList.add('text-blue-500', 'animate-pulse');
+            
+            setTimeout(() => {
+                log.innerText = "Root Serverga so'rov...";
+                setTimeout(() => {
+                    log.innerText = "IP manzil topildi: 157.240.22.35";
+                    dnsIcon.classList.remove('text-blue-500', 'animate-pulse');
+                    targetIcon.classList.remove('opacity-20');
+                    targetIcon.classList.add('opacity-100', 'text-emerald-400');
+                }, 1000);
+            }, 800);
+        }
+
+        // Sim 8: DDNS
+        function changeRouterIp() {
+            const newIp = `${Math.floor(Math.random()*200+10)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`;
+            document.getElementById('router-ip').innerText = newIp;
+            const arrow = document.getElementById('ddns-arrow');
+            
+            arrow.classList.remove('opacity-30');
+            arrow.classList.add('opacity-100', 'text-emerald-500');
+            
+            setTimeout(() => {
+                document.getElementById('dns-record-ip').innerText = newIp;
+                document.getElementById('dns-record-ip').classList.add('animate-pulse');
+                setTimeout(() => {
+                    arrow.classList.add('opacity-30');
+                    arrow.classList.remove('text-emerald-500');
+                    document.getElementById('dns-record-ip').classList.remove('animate-pulse');
+                }, 1000);
+            }, 1000);
+        }
+
+        // Sim 10: Nginx vs Apache
+        function runServerSim(type) {
+            const core = document.getElementById('sim-server-core');
+            const title = document.getElementById('sim-server-title');
+            core.innerHTML = '';
+            
+            if(type === 'apache') {
+                title.innerHTML = '<span class="text-red-500">Apache Server</span>';
+                // Create threads
+                for(let i=1; i<=5; i++) {
+                    setTimeout(() => {
+                        const req = document.getElementById(`req-${i}`);
+                        req.style.opacity = '1';
+                        
+                        const thread = document.createElement('div');
+                        thread.className = `w-10 h-10 rounded border-2 flex items-center justify-center text-xs animate-pulse-border text-white`;
+                        thread.style.backgroundColor = req.style.backgroundColor || ['#3b82f6','#10b981','#eab308','#a855f7','#ef4444'][i-1];
+                        thread.innerText = `T${i}`;
+                        core.appendChild(thread);
+                        
+                        setTimeout(()=> { req.style.opacity = '0'; }, 800);
+                    }, i*400);
+                }
+            } else {
+                title.innerHTML = '<span class="text-green-500">Nginx Server</span>';
+                // Single event loop worker
+                const worker = document.createElement('div');
+                worker.className = "w-16 h-16 rounded-full border-4 border-green-500 flex items-center justify-center animate-spin text-white text-xs font-bold";
+                worker.style.borderTopColor = 'transparent';
+                worker.innerHTML = '<span style="animation: reverse-spin 1s infinite linear;">Worker</span>';
+                core.appendChild(worker);
+                
+                let processed = 0;
+                const counter = document.createElement('div');
+                counter.className = "ml-4 font-bold text-green-400";
+                counter.innerText = "0/5 Bajrilmoqda";
+                core.appendChild(counter);
+
+                for(let i=1; i<=5; i++) {
+                    setTimeout(() => {
+                        const req = document.getElementById(`req-${i}`);
+                        req.style.opacity = '1';
+                        req.style.left = '50px'; // move towards server
+                        
+                        setTimeout(() => {
+                            req.style.opacity = '0';
+                            req.style.left = '0px'; // reset
+                            processed++;
+                            counter.innerText = `${processed}/5 Bajarildi`;
+                        }, 300);
+                    }, i*200); // Much faster handling
+                }
+            }
+        }
+
+        // Sim 11: Reverse Proxy
+        function runProxySim() {
+            const area = document.getElementById('proxy-animation-area');
+            const colors = ['bg-blue-500', 'bg-emerald-500', 'bg-purple-500'];
+            
+            for(let i=0; i<3; i++) {
+                setTimeout(() => {
+                    const packet = document.createElement('div');
+                    packet.className = `absolute w-4 h-4 rounded-full ${colors[i]} shadow-lg z-20 transition-all duration-500 ease-in`;
+                    
+                    // Start from client
+                    packet.style.left = '3rem';
+                    packet.style.top = `${2 + (i*4)}rem`;
+                    
+                    area.appendChild(packet);
+                    
+                    // Move to Proxy
+                    setTimeout(() => {
+                        packet.style.left = '50%';
+                        packet.style.top = '50%';
+                        packet.style.transform = 'translate(-50%, -50%)';
+                        
+                        // Proxy distributes to Backends
+                        setTimeout(() => {
+                            packet.style.left = 'calc(100% - 4rem)';
+                            // Randomly select backend
+                            const targetIdx = Math.floor(Math.random() * 3);
+                            packet.style.top = `${2 + (targetIdx*4)}rem`;
+                            
+                            // Visual indication on backend
+                            setTimeout(() => {
+                                document.getElementById(`rp-backend-${targetIdx+1}`).classList.add('bg-green-900/50');
+                                packet.remove();
+                                setTimeout(() => {
+                                    document.getElementById(`rp-backend-${targetIdx+1}`).classList.remove('bg-green-900/50');
+                                }, 300);
+                            }, 500);
+
+                        }, 400);
+                    }, 50);
+                }, i*300);
+            }
+        }
+
+        // Sim 12: Cloudflare
+        let cfActive = false;
+        function toggleCloudflare() {
+            cfActive = !cfActive;
+            const shield = document.getElementById('cf-shield');
+            
+            if(cfActive) {
+                shield.classList.replace('bg-orange-500', 'bg-emerald-500');
+                shield.classList.add('shadow-[0_0_40px_rgba(16,185,129,0.8)]');
+                document.getElementById('cf-attack-text').innerText = "Hujum To'sildi!";
+                document.getElementById('cf-attack-text').classList.replace('text-red-500', 'text-slate-500');
+            } else {
+                shield.classList.replace('bg-emerald-500', 'bg-orange-500');
+                shield.classList.remove('shadow-[0_0_40px_rgba(16,185,129,0.8)]');
+                document.getElementById('cf-attack-text').innerText = "DDoS Hujum!";
+                document.getElementById('cf-attack-text').classList.replace('text-slate-500', 'text-red-500');
+            }
+            runCfAttack();
+        }
+
+        function runCfAttack() {
+            if(document.getElementById('cf-attack-area')) {
+                const area = document.getElementById('cf-attack-area');
+                const cpuBar = document.getElementById('cf-cpu-bar');
+                area.innerHTML = '';
+                
+                let attackInterval = setInterval(() => {
+                    if(!document.getElementById('cf-attack-area')) {
+                        clearInterval(attackInterval); return;
+                    }
+                    
+                    const p = document.createElement('div');
+                    p.className = `absolute h-2 rounded-full w-8 ${cfActive ? 'bg-orange-500' : 'bg-red-500'} transition-all duration-1000 linear`;
+                    p.style.left = '0%';
+                    p.style.top = `${Math.random()*100}%`;
+                    area.appendChild(p);
+                    
+                    setTimeout(() => {
+                        if(cfActive) {
+                            p.style.left = '50%'; // hits CF
+                            setTimeout(() => p.remove(), 1000);
+                            cpuBar.style.width = '10%';
+                            cpuBar.className = "bg-green-500 h-full w-[10%] transition-all duration-300";
+                        } else {
+                            p.style.left = '100%'; // hits Server
+                            setTimeout(() => p.remove(), 1000);
+                            let currentW = parseInt(cpuBar.style.width) || 10;
+                            if(currentW < 95) cpuBar.style.width = (currentW + 15) + '%';
+                            if(currentW > 70) cpuBar.className = "bg-red-500 h-full transition-all duration-300";
+                            else if(currentW > 40) cpuBar.className = "bg-yellow-500 h-full transition-all duration-300";
+                        }
+                    }, 50);
+                }, 100);
+                
+                // Keep reference to stop if tab changed
+                window.currentCfInterval = attackInterval;
+            }
+        }
+
+        // Sim 17: Firewall
+        let fwState = {80: false, 3306: false};
+        function fwSimToggle(port) {
+            fwState[port] = !fwState[port];
+            const btnSpan = document.getElementById(`fw-btn-${port}`);
+            const hole = document.getElementById(`fw-hole-${port}`);
+            
+            if(fwState[port]) {
+                btnSpan.innerText = "Ochiq";
+                btnSpan.classList.add("text-emerald-400");
+                hole.classList.replace("bg-red-500", "bg-emerald-500");
+            } else {
+                btnSpan.innerText = "Yopiq";
+                btnSpan.classList.remove("text-emerald-400");
+                hole.classList.replace("bg-emerald-500", "bg-red-500");
+            }
+        }
+        function fwSendTraffic() {
+            ['user', 'hacker'].forEach(type => {
+                const el = document.getElementById(`fw-${type}`);
+                el.classList.add('translate-x-12');
+                
+                setTimeout(() => {
+                    el.classList.remove('translate-x-12');
+                    const port = type === 'user' ? 80 : 3306;
+                    if(fwState[port]) {
+                        el.style.backgroundColor = "rgba(16, 185, 129, 0.5)"; // success flash
+                    } else {
+                        el.style.backgroundColor = "rgba(239, 68, 68, 0.8)"; // block flash
+                        // shake
+                        el.classList.add('animate-bounce');
+                        setTimeout(() => el.classList.remove('animate-bounce'), 500);
+                    }
+                    setTimeout(() => {
+                        el.style.backgroundColor = type==='user' ? "rgba(30, 58, 138, 0.5)" : "rgba(127, 29, 29, 0.5)";
+                    }, 500);
+                }, 300);
+            });
+        }
+
+        // Sim 19: Rate Limiting
+        let rlClicks = 0;
+        let rlTankValue = 0;
+        function rlSimulateClick() {
+            if(rlTankValue >= 100) return; // blocked
+            
+            rlClicks++;
+            rlTankValue += 35; // 3 clicks fill the tank ~ 100%
+            
+            const tank = document.getElementById('rl-tank');
+            tank.style.width = `${rlTankValue}%`;
+            
+            const status = document.getElementById('rl-server-status');
+            
+            if(rlTankValue >= 100) {
+                // Trigger Ban
+                tank.classList.replace('bg-blue-500', 'bg-red-500');
+                status.className = "bg-red-500 text-white px-3 py-1 rounded text-sm font-bold inline-block";
+                status.innerText = "429 XATO";
+                
+                document.getElementById('rl-msg').classList.remove('opacity-0');
+                document.getElementById('rl-msg').classList.add('opacity-100', 'scale-110');
+                
+                const btn = document.getElementById('rl-btn');
+                btn.classList.add('pointer-events-none', 'grayscale');
+                
+                // Cooldown
+                setTimeout(() => {
+                    rlTankValue = 0;
+                    tank.style.width = '0%';
+                    tank.classList.replace('bg-red-500', 'bg-blue-500');
+                    status.className = "bg-green-500/20 text-green-400 border border-green-500 px-3 py-1 rounded text-sm inline-block";
+                    status.innerText = "200 OK";
+                    document.getElementById('rl-msg').classList.remove('opacity-100', 'scale-110');
+                    document.getElementById('rl-msg').classList.add('opacity-0');
+                    btn.classList.remove('pointer-events-none', 'grayscale');
+                }, 3000);
+            } else {
+                // Slow drain
+                setTimeout(() => {
+                    if(rlTankValue > 0) {
+                        rlTankValue -= 35;
+                        tank.style.width = `${Math.max(0, rlTankValue)}%`;
+                    }
+                }, 1000);
+            }
+        }
+
+        // Sim 20: Fail2Ban
+        let f2bFails = 0;
+        function f2bLogin() {
+            const pass = document.getElementById('f2b-pass').value;
+            const log = document.getElementById('f2b-log');
+            
+            if(pass === 'admin123') {
+                log.innerHTML += `<div class="text-emerald-400">Accepted password for root from 192.168.1.10</div>`;
+                document.getElementById('f2b-pass').value = '';
+                f2bFails = 0;
+            } else {
+                f2bFails++;
+                log.innerHTML += `<div class="text-red-400">Failed password for root (Urinish: ${f2bFails}/3)</div>`;
+                
+                if(f2bFails >= 3) {
+                    setTimeout(() => {
+                        log.innerHTML += `<div class="text-red-600 bg-red-900/50 font-bold p-1">Ban IP 192.168.1.10 triggered!</div>`;
+                        document.getElementById('f2b-lock-screen').classList.remove('opacity-0', 'pointer-events-none');
+                    }, 500);
+                }
+            }
+        }
+        function f2bReset() {
+            f2bFails = 0;
+            document.getElementById('f2b-log').innerHTML = '';
+            document.getElementById('f2b-pass').value = '';
+            document.getElementById('f2b-lock-screen').classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        // Sim 21: Docker
+        let dockerItems = [];
+        function packDocker(item, elementId) {
+            if(dockerItems.includes(item)) return; // already added
+            dockerItems.push(item);
+            
+            const el = document.getElementById(elementId);
+            el.classList.add('opacity-30', 'pointer-events-none'); // Disable original
+            
+            const copy = el.cloneNode(true);
+            copy.classList.remove('opacity-30', 'cursor-pointer', 'flex-1');
+            copy.className = "bg-slate-700/50 border border-slate-600 p-2 rounded text-center text-xs text-white transform scale-0 transition-transform duration-300";
+            
+            document.getElementById('docker-packed-items').appendChild(copy);
+            setTimeout(() => copy.classList.remove('scale-0'), 50);
+            
+            if(dockerItems.length === 4) {
+                setTimeout(() => {
+                    document.getElementById('docker-logo-bg').classList.remove('text-blue-500/30');
+                    document.getElementById('docker-logo-bg').classList.add('text-white/10');
+                    document.getElementById('docker-success-msg').classList.remove('opacity-0', 'scale-50');
+                }, 500);
+            }
+        }
+
+        // Sim 22: Kubernetes
+        function k8sScale(count) {
+            const area = document.getElementById('k8s-pods-area');
+            area.innerHTML = '';
+            for(let i=0; i<count; i++) {
+                setTimeout(() => {
+                    const pod = document.createElement('div');
+                    pod.className = "w-20 h-20 bg-blue-500/20 border-2 border-blue-500 rounded-lg flex flex-col items-center justify-center relative overflow-hidden pod-enter";
+                    pod.innerHTML = `
+                        <i class="fab fa-docker text-blue-400 text-2xl"></i>
+                        <span class="text-[10px] mt-1">Pod-${i+1}</span>
+                        <div class="absolute inset-0 bg-emerald-500 opacity-20 pointer-events-none pulse-bg"></div>
+                    `;
+                    area.appendChild(pod);
+                }, i*200);
+            }
+        }
+
+        // Sim 23: API / JWT
+        let hasJwt = false;
+        function jwtLogin() {
+            const pkt = document.getElementById('jwt-packet');
+            const msg = document.getElementById('jwt-server-msg');
+            
+            // Move packet to server
+            pkt.classList.remove('hidden');
+            pkt.style.transition = 'none';
+            pkt.style.left = '0%';
+            pkt.innerHTML = '<i class="fas fa-user"></i>';
+            void pkt.offsetWidth;
+            
+            pkt.style.transition = 'all 1s ease-in-out';
+            pkt.style.left = '100%';
+            
+            setTimeout(() => {
+                msg.innerHTML = '<span class="text-emerald-400">Login to\'g\'ri! JWT Yaratildi.</span>';
+                pkt.innerHTML = '<i class="fas fa-key"></i>';
+                pkt.style.left = '0%'; // Return back
+                
+                setTimeout(() => {
+                    pkt.classList.add('hidden');
+                    hasJwt = true;
+                    document.getElementById('jwt-token-display').innerText = "eyJhbGci...xMjM";
+                    document.getElementById('jwt-token-display').classList.remove('opacity-30', 'text-yellow-400');
+                    document.getElementById('jwt-token-display').classList.add('bg-emerald-900', 'text-emerald-400', 'border-emerald-500');
+                    
+                    document.getElementById('jwt-btn-data').classList.remove('opacity-50', 'cursor-not-allowed');
+                    document.getElementById('jwt-btn-data').disabled = false;
+                }, 1000);
+            }, 1000);
+        }
+
+        function jwtGetData() {
+            if(!hasJwt) return;
+            const pkt = document.getElementById('jwt-packet');
+            const msg = document.getElementById('jwt-server-msg');
+            
+            pkt.classList.remove('hidden');
+            pkt.style.transition = 'none';
+            pkt.style.left = '0%';
+            pkt.innerHTML = '<i class="fas fa-key text-[8px]"></i><i class="fas fa-database text-[10px]"></i>';
+            void pkt.offsetWidth;
+            
+            pkt.style.transition = 'all 1s ease-in-out';
+            pkt.style.left = '100%';
+            
+            setTimeout(() => {
+                msg.innerHTML = '<span class="text-blue-400">Token tekshirildi ✅<br>Ma\'lumot berildi.</span>';
+                pkt.innerHTML = '<i class="fas fa-file-alt"></i>';
+                pkt.style.left = '0%'; // Return back
+                
+                setTimeout(() => {
+                    pkt.classList.add('hidden');
+                    document.getElementById('jwt-token-display').innerText = "Ma'lumotlar keldi!";
+                }, 1000);
+            }, 1000);
+        }
+
+        // Start App
+        window.onload = init;
+    </script>
+</body>
+</html>
